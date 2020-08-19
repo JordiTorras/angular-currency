@@ -1,0 +1,20 @@
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text">{{ importe.moneda }}</span>
+  </div>
+  <input
+    type="text"
+    class="form-input-moneda"
+    placeholder="Introduzca un
+  importe"
+    [(ngModel)]="importeTXT"
+    (focus)="f_convertirATexto()"
+    (blur)="f_convertirANumero()"
+    (keyup)="f_validarTecla($event)"
+  />
+  <div *ngIf="!bImporteCorrecto">
+    <h4>Importe incorrecto</h4>
+  </div>
+  <p>{{ importeTXT }}</p>
+  <p>{{ tMensajeError }}</p>
+</div>

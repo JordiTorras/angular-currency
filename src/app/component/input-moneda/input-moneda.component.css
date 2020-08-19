@@ -1,0 +1,7 @@
+.form-input-moneda {
+  text-align: right;
+  width: 300px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 0px 10px;
+}
