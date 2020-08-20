@@ -48,7 +48,11 @@ export class MonedasService {
         // console.log(resp.monedas[0].codigoIso);
 
         this.cargada = true;
-        console.log(this.monedas);
+        //console.log(this.monedas);
       });
+  }
+
+  f_getListaMonedas(): Moneda[] {
+    return this.monedas;
   }
 }

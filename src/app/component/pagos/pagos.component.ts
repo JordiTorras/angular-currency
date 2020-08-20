@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MonedasService } from 'src/app/services/monedas.service';
+import { Moneda } from 'src/app/class/moneda';
 
 @Component({
   selector: 'app-pagos',
@@ -7,7 +8,19 @@ import { MonedasService } from 'src/app/services/monedas.service';
   styleUrls: ['./pagos.component.css'],
 })
 export class PagosComponent implements OnInit {
-  constructor(public _listaMonedas: MonedasService) {}
+  monedaSeleccionada: String;
 
-  ngOnInit(): void {}
+  constructor(public listaMonedas: MonedasService) {}
+
+  ngOnInit(): void {
+    //cargamos la lista de monedas
+    /* Se inicializa mucho antes que se cargen los datos del json en este punto
+      listaMonedas no tiene ningun dato, pero en el momento que se cargan los datos
+      listaMonedas tiene datos.
+      
+      Si ponemos un breakpoint en el servicio, veremos que se carga la pantalla en blanco
+      y cuando continuamos una vez llega la respuesta se completan los datos de la lista desplegable
+    */
+    console.log(this.listaMonedas);
+  }
 }

@@ -1,4 +1,13 @@
 <p>pagos works!</p>
+<p>
+  <select name="miselect" [(ngModel)]="monedaSeleccionada">
+    <option [value]="item.codigoIso" *ngFor="let item of listaMonedas.monedas">{{
+      item.codigoIso
+    }}</option>
+  </select>
+</p>
+{{ monedaSeleccionada }}
+{{ listaMonedas.cargada }}
 
 <div class="container">
   <div class="form-group">
