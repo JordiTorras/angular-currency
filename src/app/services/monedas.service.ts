@@ -1,46 +1,54 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 import { Moneda } from '../class/moneda';
+import { MonedasResponse } from '../class/monedas-response';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MonedasService {
-  public monedas: Moneda[] ;
+  public monedas: Moneda[] = [];
   public cargada: boolean = false;
 
   constructor(private http: HttpClient) {
     // leemos el fichero json y cargamos la respuesta 'resp' en el array de monedas[]
-    http.get('../assets/data/configuracionMonedas.json').subscribe((resp) => {
-      this.f_cargarlistaMonedas(resp);
-      this.cargada = true;
-      console.log(this.monedas);
-    });
-  }
+    console.log('se ejecuta MonedaService.constructor()');
+    // realizamos la llamada .get y el .subscribe en la misma llamada para que carge al inicio de la
+    // aplicaciñón
+    /*
+        https://www.youtube.com/watch?v=J2tN5zG0k18&feature=youtu.be
 
-  private f_cargarlistaMonedas(resp: any) {
-    //  con esta instrucción copia directamente el json a la classe, pero no usa el New ¿¿??
-    //  funciona incluso siendo las propiedades de la clase privados
-    // esta llamada es como si definierasmo this.monedas como monedas: any[] compila
-    // pero en ejecución al ser javascript ignora el type y lo trata como un any
-    this.monedas = resp;
+        http.get<MonedasResponse>(url)  ==> Para definir que vamos a obtener un typo <MonedasResponse>
+    */
 
-    
+    http
+      // http.get devuelve un Observable por lo que nos podemos suscribir
+      .get<MonedasResponse>('../assets/data/configuracionMonedas.json')
+      // http.pipe permite modificar los datos de salida
+      .pipe(
+        // map permite modificar la información que fluye atrabes del observable
+        // modificamos para cada elemento del array de respuesta (resp.monda) con el .map
+        // para que devuelva una instancia de la clase Moneda llamando la funcion
+        // estatica Moneda.f_monedaDesdeJson
 
-/*     for (let i of resp) {
-      console.log(i);
-      let a: Moneda = new Moneda(
-        i.codigoIso,
-        i.codigoMoneda,
-        i.nombre,
-        i.numeroDecimales,
-        i.simbolo
-      );
-      this.monedas.push(a);
-    } */
+        map((resp) => {
+          return resp.monedas.map((datoJson) =>
+            Moneda.f_MonedaDesdeJson(datoJson)
+          );
+        })
+      )
+      // el observable devuelve un Array de instancias de la clase Moneda por que hemos
+      // modificado el observable con el .pipe(map)
+      .subscribe((resp) => {
+        this.monedas = resp;
 
-    // this.monedas.forEach(function (value) {
-    //   console.log(value);
-    // });
+        // con resp.monedas accedemos al elemento monedas de la interface MonedasRequest
+        // console.log(resp.monedas);
+        // console.log(resp.monedas[0].codigoIso);
+
+        this.cargada = true;
+        console.log(this.monedas);
+      });
   }
 }
