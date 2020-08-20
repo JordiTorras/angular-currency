@@ -1,0 +1,39 @@
+{
+  "monedas": [
+    {
+      "codigoIso": "ARS",
+      "codigoMoneda": 1,
+      "simbolo": "$",
+      "numeroDecimales": 2,
+      "nombre": "Peso argentino"
+    },
+    {
+      "codigoIso": "EUR",
+      "codigoMoneda": 2,
+      "simbolo": "€",
+      "numeroDecimales": 2,
+      "nombre": "Euro"
+    },
+    {
+      "codigoIso": "USD",
+      "codigoMoneda": 3,
+      "simbolo": "$",
+      "numeroDecimales": 2,
+      "nombre": "Dolar americano"
+    },
+    {
+      "codigoIso": "UF",
+      "codigoMoneda": 4,
+      "simbolo": "$",
+      "numeroDecimales": 4,
+      "nombre": "UF"
+    },
+    {
+      "codigoIso": "CLP",
+      "codigoMoneda": 5,
+      "simbolo": "$",
+      "numeroDecimales": 0,
+      "nombre": "Peso Chileno"
+    }
+  ]
+}

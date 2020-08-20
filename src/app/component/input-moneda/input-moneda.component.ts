@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Moneda } from '../../class/moneda';
+import { Importe } from '../../class/importe';
 
 @Component({
   selector: 'app-input-moneda',
@@ -8,13 +8,21 @@ import { Moneda } from '../../class/moneda';
   styleUrls: ['./input-moneda.component.css'],
 })
 export class InputMonedaComponent implements OnInit {
-  importe: Moneda = new Moneda(10500.5, 'EUR', new Date('20200817'));
+  /*
+    Patron para validar el formato númerico
+    ^(([0-9]+)((.[0-9]{3})*)?)(,[0-9]{1,2})?$
+    ^ ... $ --> validar de inicio a fin
 
-  importeTXT: string;
+    (([0-9]+)((.[0-9]{3})*)?)  --> Validar la parte entera
+    (,[0-9]{1,n})?  --> Validar la parte decimal
+  */
   validar_moneda_regex: string = '^(([0-9]+)((.[0-9]{3})*)?)(,[0-9]{1,2})?$';
   patt = new RegExp(this.validar_moneda_regex, 'g');
-  bImporteCorrecto: boolean = true;
-  tMensajeError: String;
+
+  importe: Importe = new Importe(10500.5, 'EUR', new Date('20200817'));
+  importeTXT: string;
+
+  b_importeCorrecto: boolean = true;
 
   constructor() {}
 
@@ -27,11 +35,11 @@ export class InputMonedaComponent implements OnInit {
     // let a = patt.test(this.importeTXT);
     // console.log('importe: ' + this.importeTXT + ' RegExp: ' + a);
 
-    this.bImporteCorrecto = this.patt.test(this.importeTXT);
+    this.b_importeCorrecto = this.patt.test(this.importeTXT);
 
-    if (this.bImporteCorrecto == false) {
-      this.tMensajeError = 'formato del importe incorrecto';
-    }
+    // if (this.bImporteCorrecto == false) {
+    //   this.tMensajeError = 'formato del importe incorrecto';
+    // }
   }
 
   f_convertirATexto(): void {

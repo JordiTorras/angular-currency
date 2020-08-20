@@ -1,26 +1,21 @@
 export class Moneda {
-  importe: number;
-  moneda: string;
-  fechaCambio: Date = new Date();
-  tasaCambio: number;
-  importeMonCia: number;
-  monedaMonCia: string;
+  private Iso: string;
+  private codigoMoneda2: number;
+  private nombre: string;
+  private numeroDecimales: number;
+  private simbolo: string;
 
-  constructor(p_importe: number, p_moneda: string, p_fecha: Date) {
-    this.importe = p_importe;
-    this.moneda = p_moneda;
-    this.monedaMonCia =
-      'ARS'; /* Peso Argentino --> moneda por defecto de la instalación */
-    this.f_setFechaCambio(p_fecha);
-    this.f_calcularMonCia;
-  }
-
-  f_setFechaCambio(p_fecha: Date): void {
-    this.fechaCambio = p_fecha;
-    this.tasaCambio = 1;
-  }
-
-  f_calcularMonCia(): void {
-    this.importeMonCia = this.importe / this.tasaCambio;
+  constructor(
+    p_codigoIso: string,
+    p_codigoMoneda2: number,
+    p_nombre: string,
+    p_numeroDecimales: number,
+    p_simbolo: string
+  ) {
+    this.Iso = p_codigoIso;
+    this.codigoMoneda2 = p_codigoMoneda2;
+    this.nombre = p_nombre;
+    this.numeroDecimales = p_numeroDecimales;
+    this.simbolo = p_simbolo;
   }
 }
