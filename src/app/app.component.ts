@@ -13,8 +13,10 @@ export class AppComponent implements OnInit {
   // _listaMonedas public para que este disponible para todos los modulos de forma directa.
   constructor(
     public _listaMonedas: MonedasService,
-    public _listaCambios: CambioService
+    public _tasasCambio: CambioService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this._tasasCambio.cambio.EUR);
+  }
 }
