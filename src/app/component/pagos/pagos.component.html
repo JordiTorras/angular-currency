@@ -1,13 +1,17 @@
 <p>pagos works!</p>
+<div>
+  Lista de monedas: Cargado = {{ listaMonedas.cargada }}<br />
+  Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}
+</div>
+
 <p>
   <select name="miselect" [(ngModel)]="monedaSeleccionada">
-    <option [value]="item.codigoIso" *ngFor="let item of listaMonedas.monedas">{{
-      item.codigoIso
-    }}</option>
+    <option *ngFor="let item of listaMonedas.monedas" [value]="item.codigoIso"
+      >{{ item.codigoIso }} {{ item.nombre }}</option
+    >
   </select>
 </p>
 {{ monedaSeleccionada }}
-{{ listaMonedas.cargada }}
 
 <div class="container">
   <div class="form-group">

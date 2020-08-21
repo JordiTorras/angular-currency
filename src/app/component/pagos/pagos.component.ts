@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MonedasService } from 'src/app/services/monedas.service';
+import { CambioService } from 'src/app/services';
 
 @Component({
   selector: 'app-pagos',
@@ -7,9 +8,12 @@ import { MonedasService } from 'src/app/services/monedas.service';
   styleUrls: ['./pagos.component.css'],
 })
 export class PagosComponent implements OnInit {
-  monedaSeleccionada: String;
+  monedaSeleccionada: String = 'EUR';
 
-  constructor(public listaMonedas: MonedasService) {}
+  constructor(
+    public listaMonedas: MonedasService,
+    public listacambios: CambioService
+  ) {}
 
   ngOnInit(): void {
     //cargamos la lista de monedas

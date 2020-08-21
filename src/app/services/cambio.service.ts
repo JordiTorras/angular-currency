@@ -7,6 +7,7 @@ import { Rates, RateResponse } from 'src/app/class/index';
 })
 export class CambioService {
   public cambio: Rates;
+  public cargada: boolean = false;
 
   /*
       https://leiva.io/2020/03/29/angular-precargar-datos-antes-de-arrancar/
@@ -41,7 +42,7 @@ export class CambioService {
 
   constructor(private http: HttpClient) {}
 
-  f_obtenerCambios() {
+  f_obtenerTasaDeCambio() {
     console.log('INICIO constructor CambioService');
     /* return this.http
       .get<RateResponse>(
@@ -66,11 +67,12 @@ export class CambioService {
       )
       .toPromise()
       .then((resp) => {
-        console.log('RESPUESTA API');
-        console.log(resp);
+        // console.log('RESPUESTA API');
+        // console.log(resp);
 
         this.cambio = resp.rates;
-        console.log(this.cambio);
+        this.cargada = true;
+        // console.log(this.cambio);
       });
   }
 }
