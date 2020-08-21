@@ -1,3 +1,5 @@
+import { HttpClient } from '@angular/common/http';
+
 export class Importe {
   importe: number;
   moneda: string;
@@ -18,11 +20,12 @@ export class Importe {
   f_setFechaCambio(p_fecha: Date): void {
     this.fechaCambio = p_fecha;
     this.tasaCambio = 1;
+    console.log('INICIO f_setFechaCambio');
+
+    console.log('FIN f_setFechaCambio');
   }
 
   f_calcularMonCia(): void {
     this.importeMonCia = this.importe / this.tasaCambio;
   }
 }
-
-

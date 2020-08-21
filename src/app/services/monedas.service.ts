@@ -13,7 +13,7 @@ export class MonedasService {
 
   constructor(private http: HttpClient) {
     // leemos el fichero json y cargamos la respuesta 'resp' en el array de monedas[]
-    console.log('se ejecuta MonedaService.constructor()');
+    //console.log('se ejecuta MonedaService.constructor()');
     // realizamos la llamada .get y el .subscribe en la misma llamada para que carge al inicio de la
     // aplicaciñón
     /*

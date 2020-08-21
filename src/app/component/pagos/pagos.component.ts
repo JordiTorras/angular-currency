@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MonedasService } from 'src/app/services/monedas.service';
-import { Moneda } from 'src/app/class/moneda';
 
 @Component({
   selector: 'app-pagos',
@@ -21,6 +20,6 @@ export class PagosComponent implements OnInit {
       Si ponemos un breakpoint en el servicio, veremos que se carga la pantalla en blanco
       y cuando continuamos una vez llega la respuesta se completan los datos de la lista desplegable
     */
-    console.log(this.listaMonedas);
+    //console.log(this.listaMonedas);
   }
 }

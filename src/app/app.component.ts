@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MonedasService } from './services/monedas.service';
+import { MonedasService, CambioService } from './services/index';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +11,10 @@ export class AppComponent implements OnInit {
 
   // Importamos en el constructor de la aplicación la lista de monedas, hacemos la variable
   // _listaMonedas public para que este disponible para todos los modulos de forma directa.
-  constructor(public _listaMonedas: MonedasService) {}
+  constructor(
+    public _listaMonedas: MonedasService,
+    public _listaCambios: CambioService
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
