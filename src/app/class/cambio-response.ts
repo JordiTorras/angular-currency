@@ -5,13 +5,15 @@
 //   "Set quicktype target language"
 
 export interface RateResponse {
-  success: boolean;
-  base: string;
-  date: string;
-  rates: Rates;
+  success:    boolean;
+  timeseries: boolean;
+  base:       string;
+  start_date: string;
+  end_date:   string;
+  rates:      { [key: string]: Rate };
 }
 
-export interface Rates {
+export interface Rate {
   ARS: number;
   CLP: number;
   COP: number;

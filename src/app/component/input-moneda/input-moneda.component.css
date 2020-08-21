@@ -1,7 +1,35 @@
-.form-input-moneda {
+/* .form-input-moneda {
+  border-style: solid;
+  color: cadetblue;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 0px 10px;
+}
+
+.form-input-importe {
   text-align: right;
   width: 300px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 0px 10px;
+} */
+
+.form-input-moneda {
+  border-style: solid;
+  background-color: #dddddd;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.form-input-importe {
+  width: 300px;
+  text-align: right;
+  border-style: solid;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.form-input-error {
+  /* background-color: red; */
+  color: red;
 }

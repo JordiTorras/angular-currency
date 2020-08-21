@@ -73,7 +73,7 @@ export class MonedasService {
       .then((resp) => {
         this.monedas = resp;
         this.cargada = true;
-        console.log(this.monedas);
+        // console.log(this.monedas);
       });
   }
 }

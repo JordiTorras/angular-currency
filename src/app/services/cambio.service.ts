@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Rates, RateResponse } from 'src/app/class/index';
+import { Rate, RateResponse, Tasas } from 'src/app/class/index';
+
+export let tasas: Tasas;
 
 @Injectable({
   providedIn: 'root',
 })
 export class CambioService {
-  public cambio: Rates;
+  public cambio: { [key: string]: Rate };
   public cargada: boolean = false;
 
   /*
@@ -43,7 +45,7 @@ export class CambioService {
   constructor(private http: HttpClient) {}
 
   f_obtenerTasaDeCambio() {
-    console.log('INICIO constructor CambioService');
+    // console.log('INICIO constructor CambioService');
     /* return this.http
       .get<RateResponse>(
         'https://api.exchangerate.host/latest?base=ARS&symbols=USD,EUR,ARS,CLP,COP'
@@ -63,7 +65,8 @@ export class CambioService {
     */
     return this.http
       .get<RateResponse>(
-        'https://api.exchangerate.host/latest?base=ARS&symbols=USD,EUR,ARS,CLP,COP'
+        //'https://api.exchangerate.host/latest?base=ARS&symbols=USD,EUR,ARS,CLP,COP'
+        'https://api.exchangerate.host/timeseries?start_date=2020-08-01&end_date=2020-08-21&symbols=USD,EUR,ARS,CLP,COP&base=ARS'
       )
       .toPromise()
       .then((resp) => {
@@ -72,7 +75,7 @@ export class CambioService {
 
         this.cambio = resp.rates;
         this.cargada = true;
-        // console.log(this.cambio);
+        tasas = new Tasas(this.cambio);
       });
   }
 }

@@ -17,6 +17,6 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this._tasasCambio.cambio.EUR);    
+    // console.log(this._tasasCambio.cambio.EUR);    
   }
 }

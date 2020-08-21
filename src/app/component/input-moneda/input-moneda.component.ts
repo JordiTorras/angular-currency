@@ -30,12 +30,15 @@ export class InputMonedaComponent implements OnInit {
 
   f_convertirANumero(): void {
     // Convierte un número el input a formato númerico
-    console.log('TXT --> NUMBER');
+    // console.log('TXT --> NUMBER');
 
     // let a = patt.test(this.importeTXT);
     // console.log('importe: ' + this.importeTXT + ' RegExp: ' + a);
 
     this.b_importeCorrecto = this.patt.test(this.importeTXT);
+    this.importe.importe = Number(this.importeTXT);
+
+    this.importe.f_calcularMonCia();
 
     // if (this.bImporteCorrecto == false) {
     //   this.tMensajeError = 'formato del importe incorrecto';
@@ -44,12 +47,11 @@ export class InputMonedaComponent implements OnInit {
 
   f_convertirATexto(): void {
     // Convierte un número en formato texto 9.999.999,99 en función de la moneda
-    console.log('NUMBER --> TXT');
-
+    // console.log('NUMBER --> TXT');
     // pattern="^(?\d+:.\d{3})*\,\d{2}$"
   }
 
   f_validarTecla(evento: Event): void {
-    console.log('Validar Tecla' + evento);
+    // console.log('Validar Tecla' + evento);
   }
 }
