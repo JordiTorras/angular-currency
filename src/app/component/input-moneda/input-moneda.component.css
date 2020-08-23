@@ -21,10 +21,10 @@
 .input-moneda-contravalor {
   color: gray;
   font-size: 10px;
-  /* border: 1px solid black; */
+  /* border: 1px solid black;  */
   /* align-self: right; */
 }
 
-.input-moneda-contravaloar > li:not(:last-child) {
-  margin-right: 40px;
+#sublista-moneda > li:not(:last-child) {
+  margin-right: 30px;
 }

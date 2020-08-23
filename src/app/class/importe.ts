@@ -8,7 +8,7 @@ export class Importe {
   moneda: string;
   fechaCambio: Date = new Date();
   tasaCambio: number;
-  importeMonCia: number;
+  importeMonCia: number = 0;
   monedaMonCia: string;
 
   //servicioTasas = AppInjector.get(CambioService);

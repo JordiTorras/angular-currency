@@ -20,11 +20,13 @@ export class InputMonedaComponent implements OnInit {
   */
   validar_moneda_regex: string = '^(([0-9]+)((.[0-9]{3})*)?)(,[0-9]{1,2})?$';
   patt = new RegExp(this.validar_moneda_regex, 'g');
-
-  importe: Importe = new Importe(0, 'EUR', new Date('20200817'));
-  importeTXT: string;
-
   b_importeCorrecto: boolean = true;
+
+  public importe: Importe = new Importe(0, 'EUR', new Date('20200817'));
+  public timporte: string;
+  // tenemos que usar una variable string para el ngModel, no podemos usar
+  // una variable numero como seria usar importe.importe y asi actualizar
+  // directamente la instancia de la clase.
 
   public mask: any = {
     mask: '€ num',
@@ -42,33 +44,6 @@ export class InputMonedaComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
-
-  f_convertirANumero(): void {
-    // Convierte un número el input a formato númerico
-    // console.log('TXT --> NUMBER');
-
-    // let a = patt.test(this.importeTXT);
-    // console.log('importe: ' + this.importeTXT + ' RegExp: ' + a);
-
-    this.b_importeCorrecto = this.patt.test(this.importeTXT);
-    this.importe.importe = Number(this.importeTXT);
-
-    this.importe.f_calcularMonCia();
-
-    // if (this.bImporteCorrecto == false) {
-    //   this.tMensajeError = 'formato del importe incorrecto';
-    // }
-  }
-
-  f_convertirATexto(): void {
-    // Convierte un número en formato texto 9.999.999,99 en función de la moneda
-    // console.log('NUMBER --> TXT');
-    // pattern="^(?\d+:.\d{3})*\,\d{2}$"
-  }
-
-  f_validarTecla(evento: Event): void {
-    // console.log('Validar Tecla' + evento);
-  }
 
   public onFocus() {
     console.log('focus');
@@ -92,6 +67,52 @@ export class InputMonedaComponent implements OnInit {
     mascara.resolve(this.importe.importe.toString());
     console.log('masked.value: ' + mascara.value);
     console.log('masked.unmaskedValue: ' + mascara.unmaskedValue);
+  }
+
+  public onChange(e): void {
+    this.importe.importe = +this.timporte;
+    /**
+     * no hace falta convertir de string a numero por que tenemos la pripiedad
+     * [unmask] a true, es decir devolvemos el valor sin la mascara --> formato numerico
+     *
+     * para trasnformar un string a numero
+     *  var x = "32";
+     *  var y: number = +x;
+     */
+
+     this.importe.f_calcularMonCia();
+  }
+
+  /** 
+   * Funciones es deshuso pero las dejo por los ejemplos de 
+   * validacion con patrones RegEx    
+  } */
+
+  f_convertirANumero(): void {
+    // Convierte un número el input a formato númerico
+    // console.log('TXT --> NUMBER');
+
+    // let a = patt.test(this.importeTXT);
+    // console.log('importe: ' + this.importeTXT + ' RegExp: ' + a);
+
+    this.b_importeCorrecto = this.patt.test(this.timporte);
+    this.importe.importe = Number(this.timporte);
+
+    this.importe.f_calcularMonCia();
+
+    // if (this.bImporteCorrecto == false) {
+    //   this.tMensajeError = 'formato del importe incorrecto';
+    // }
+  }
+
+  f_convertirATexto(): void {
+    // Convierte un número en formato texto 9.999.999,99 en función de la moneda
+    // console.log('NUMBER --> TXT');
+    // pattern="^(?\d+:.\d{3})*\,\d{2}$"
+  }
+
+  f_validarTecla(evento: Event): void {
+    // console.log('Validar Tecla' + evento);
   }
 
   public onComplete() {}
