@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MonedasService } from 'src/app/services/monedas.service';
-import { CambioService } from 'src/app/services';
+import {
+  CambioService,
+  MonedasService,
+  MonedasJsonService,
+} from 'src/app/services';
 
 @Component({
   selector: 'app-pagos',
@@ -12,7 +15,8 @@ export class PagosComponent implements OnInit {
 
   constructor(
     public listaMonedas: MonedasService,
-    public listacambios: CambioService
+    public listacambios: CambioService,
+    public listaMonedasJson: MonedasJsonService
   ) {}
 
   ngOnInit(): void {

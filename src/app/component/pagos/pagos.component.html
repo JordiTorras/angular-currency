@@ -2,8 +2,9 @@
   <div class="row">
     <div class="col-md-12 themed-grid-col">
       pagos works! <br />
-      Lista de monedas: Cargado = {{ listaMonedas.cargada }}<br />
-      Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}
+      Lista de monedas (objeto): Cargado = {{ listaMonedas.cargada }}<br />      
+      Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}<br>
+      Lista de monedas (json): Cargado = {{ listaMonedasJson.cargada }}<br />
     </div>
   </div>
 
@@ -12,7 +13,7 @@
       Moneda de liquidación:
       <select name="miselect" [(ngModel)]="monedaSeleccionada">
         <option
-          *ngFor="let item of listaMonedas.monedas"
+          *ngFor="let item of listaMonedasJson.monedas"
           [value]="item.codigoIso"
           >{{ item.codigoIso }} {{ item.nombre }}</option
         >

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Rate, RateResponse, Tasas } from 'src/app/class/index';
 
-export let tasas: Tasas;
+export let gl_tasas: Tasas;
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +75,7 @@ export class CambioService {
 
         this.cambio = resp.rates;
         this.cargada = true;
-        tasas = new Tasas(this.cambio);
+        gl_tasas = new Tasas(this.cambio);
       });
   }
 }

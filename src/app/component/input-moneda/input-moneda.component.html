@@ -1,6 +1,6 @@
 <div class="input-group input-group-sm">
   <div class="input-group-prepend">
-    <span class="input-group-text">{{ importe.moneda }}</span>
+    <span class="input-group-text">{{ importe.moneda.codigoIso }}</span>
   </div>
   <input
     type="text"
@@ -27,11 +27,9 @@
   <li>{{ importe.importeMonCia }} {{ importe.monedaMonCia }}</li>
 </ul> -->
 <span class="float-left input-moneda-contravalor">
-  (1 {{ importe.moneda }} = {{ importe.tasaCambio }}
-  {{ importe.monedaMonCia }})
+  (1 {{ importe.moneda.codigoIso }} = {{ importe.f_printTasaCambio(2) }}
+  {{ importe.monedaCambio.codigoIso }})
 </span>
 <span class="float-right input-moneda-contravalor">
-  {{ importe.importeMonCia }} {{ importe.monedaMonCia }}
+  {{ importe.f_printImporteCambio() }} {{ importe.monedaCambio.codigoIso }}
 </span>
-
-

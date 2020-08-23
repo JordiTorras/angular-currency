@@ -4,6 +4,8 @@ import { map } from 'rxjs/operators';
 import { Moneda } from '../class/moneda';
 import { MonedasResponse } from '../class/monedas-response';
 
+export let gl_monedas: MonedasService;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,7 +56,7 @@ export class MonedasService {
 
   constructor(private http: HttpClient) {}
 
-  f_obtenerListaMonedas() {
+  public f_obtenerListaMonedas() {
     return this.http
       .get<MonedasResponse>('../assets/data/configuracionMonedas.json')
       .pipe(
@@ -73,7 +75,17 @@ export class MonedasService {
       .then((resp) => {
         this.monedas = resp;
         this.cargada = true;
-        // console.log(this.monedas);
+        console.log(this.monedas);
+        gl_monedas = this;
       });
+  }
+
+  public f_getDatosMoneda(p_moneda: string): Moneda {
+    for (let i = 0; i < this.monedas.length; i++) {
+      if (p_moneda === this.monedas[i].codigoIso) {
+        return this.monedas[i];
+      }
+    }
+    return null;
   }
 }

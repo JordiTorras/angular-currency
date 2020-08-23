@@ -22,7 +22,7 @@ export class InputMonedaComponent implements OnInit {
   patt = new RegExp(this.validar_moneda_regex, 'g');
   b_importeCorrecto: boolean = true;
 
-  public importe: Importe = new Importe(0, 'EUR', new Date('20200817'));
+  public importe: Importe = new Importe(0, 'EUR');
   public timporte: string;
   // tenemos que usar una variable string para el ngModel, no podemos usar
   // una variable numero como seria usar importe.importe y asi actualizar
@@ -40,8 +40,6 @@ export class InputMonedaComponent implements OnInit {
       },
     },
   };
-
-  constructor() {}
 
   ngOnInit(): void {}
 
@@ -65,8 +63,8 @@ export class InputMonedaComponent implements OnInit {
     */
     let mascara = IMask.createMask(this.mask);
     mascara.resolve(this.importe.importe.toString());
-    console.log('masked.value: ' + mascara.value);
-    console.log('masked.unmaskedValue: ' + mascara.unmaskedValue);
+    // console.log('masked.value: ' + mascara.value);
+    // console.log('masked.unmaskedValue: ' + mascara.unmaskedValue);
   }
 
   public onChange(e): void {
@@ -79,8 +77,6 @@ export class InputMonedaComponent implements OnInit {
      *  var x = "32";
      *  var y: number = +x;
      */
-
-     this.importe.f_calcularMonCia();
   }
 
   /** 
@@ -98,7 +94,7 @@ export class InputMonedaComponent implements OnInit {
     this.b_importeCorrecto = this.patt.test(this.timporte);
     this.importe.importe = Number(this.timporte);
 
-    this.importe.f_calcularMonCia();
+    //this.importe.f_calcularCambio();
 
     // if (this.bImporteCorrecto == false) {
     //   this.tMensajeError = 'formato del importe incorrecto';
