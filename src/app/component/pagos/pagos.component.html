@@ -1,19 +1,115 @@
-<p>pagos works!</p>
-<div>
-  Lista de monedas: Cargado = {{ listaMonedas.cargada }}<br />
-  Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}
-</div>
-
-<p>
-  <select name="miselect" [(ngModel)]="monedaSeleccionada">
-    <option *ngFor="let item of listaMonedas.monedas" [value]="item.codigoIso"
-      >{{ item.codigoIso }} {{ item.nombre }}</option
-    >
-  </select>
-</p>
-{{ monedaSeleccionada }}
-
 <div class="container">
+  <div class="row">
+    <div class="col-md-12 themed-grid-col">
+      pagos works! <br />
+      Lista de monedas: Cargado = {{ listaMonedas.cargada }}<br />
+      Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 themed-grid-col">
+      Moneda de liquidación:
+      <select name="miselect" [(ngModel)]="monedaSeleccionada">
+        <option
+          *ngFor="let item of listaMonedas.monedas"
+          [value]="item.codigoIso"
+          >{{ item.codigoIso }} {{ item.nombre }}</option
+        >
+      </select>
+      <br />
+      {{ monedaSeleccionada }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="div col-md-6 themed-grid-col">
+      .div col-md-6
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">
+          .div col-md-4
+        </div>
+        <div class="div col-md-8 themed-grid-col">
+          .div col-md-8
+        </div>
+      </div>
+    </div>
+    <div class="div col-md-6 themed-grid-col">
+      .div col-md-6
+    </div>
+  </div>
+
+  <!--Tratando los campos de totales como si fueran una lista (generacion dinamica) -->
+  <!-- <div class="row">
+    <div class="div col-md-6 themed-grid-col">
+      <ul class="list-unstyled">
+        <li>
+          <div class="row">
+            <div class="div col-md-4 themed-grid-col">
+              Importe bruto
+            </div>
+            <div class="div col-md-8 themed-grid-col">
+              <app-input-moneda></app-input-moneda>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="row">
+            <div class="div col-md-4 themed-grid-col">
+              Deducible
+            </div>
+            <div class="div col-md-8 themed-grid-col">
+              <app-input-moneda></app-input-moneda>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="div col-md-6 themed-grid-col">
+      .div col-md-6
+    </div>
+  </div> -->
+
+  <!--Tratando los campos de totales como datos independientes -->
+  <div class="row">
+    <div class="div col-md-6 themed-grid-col">
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">
+          Importe bruto:
+        </div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda id="iBruto"></app-input-moneda>
+        </div>
+      </div>
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">
+          Deducible:
+        </div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda></app-input-moneda>
+        </div>
+      </div>
+    </div>
+    <div class="div col-md-6 themed-grid-col">
+      .div col-md-6
+    </div>
+  </div>
+
+  <!-- <div class="col-md-6 themed-grid-col">
+        <div class="col-md-2 themed-grid-col">
+          <label for="iBruto">Importe bruto</label>
+        </div>
+        <div class="col-md-4 themed-grid-col">
+          <app-input-moneda></app-input-moneda>
+        </div>
+      </div>
+      <div class="col-md-6 themed-grid-col">
+        <label for="iBruto">Importe bruto</label>
+        <app-input-moneda></app-input-moneda>
+      </div>
+    </div>  -->
+
+  <!-- <div class="container">
   <div class="form-group">
     <label for="iBruto">Importe bruto</label>
     <app-input-moneda></app-input-moneda>
@@ -42,4 +138,5 @@
     <label for="iTotal">Importe final</label>
     <app-input-moneda></app-input-moneda>
   </div>
+</div> -->
 </div>
