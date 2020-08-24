@@ -7,7 +7,7 @@
     class="form-control"
     style="text-align: right;"
     placeholder="Introduzca un importe"
-    [(ngModel)]="timporte"
+    [(ngModel)]="__importe"
     (ngModelChange)="onChange($event)"
     [imask]="mask"
     [unmask]="true"
@@ -33,3 +33,4 @@
 <span class="float-right input-moneda-contravalor">
   {{ importe.f_printImporteCambio() }} {{ importe.monedaCambio.codigoIso }}
 </span>
+{{ input_moneda }}

@@ -16,6 +16,8 @@ export interface MonedaResponse {
   codigoIso: string;
   codigoMoneda: number;
   simbolo: string;
+  prefijo: string;
+  sufijo: string;
   numeroDecimales: number;
   nombre: string;
 }

@@ -22,11 +22,12 @@ export class Importe {
     this._monedaCambio = new Moneda('ARS');
     this.f_setFechaCambio(p_fecha); // hay que crear una funcion por que no se puede usar el SET
     this.f_obtenerTasaCambio();
+    this._importeCambio = this.f_calcularCambio(p_importe);
   }
 
   public set importe(val: number) {
     this._importe = val;
-    this.f_calcularCambio();
+    this._importeCambio = this.f_calcularCambio(this._importe);
   }
 
   public get importe() {
@@ -34,8 +35,14 @@ export class Importe {
   }
 
   public set moneda(val: Moneda) {
+    // Calculamos el importe en la nueva moneda
+    this.f_obtenerTasaCambio(this.moneda.codigoIso, val.codigoIso);
+    this._importe = this.f_calcularCambio(this._importe);
+
+    // Asignamos la nueva moneda
     this._moneda = val;
     this.f_obtenerTasaCambio();
+    this._importeCambio = this.f_calcularCambio(this._importe);
   }
 
   public get moneda(): Moneda {
@@ -44,6 +51,7 @@ export class Importe {
 
   public set fechaCambio(val: Date) {
     this.f_obtenerTasaCambio();
+    this._importeCambio = this.f_calcularCambio(this._importe);
   }
 
   public get fechaCambio(): Date {
@@ -65,16 +73,13 @@ export class Importe {
      * f_obtenerTasaCambio() con un booleano
      */
     this._tasaCambio = val;
+    this._fechaCambio = new Date();
+    this.f_calcularCambio(this._importeCambio);
+    this._importeCambio = this.f_calcularCambio(this._importe);
   }
 
   public get tasaCambio(): number {
     return this._tasaCambio;
-  }
-
-  public f_printTasaCambio(dec: number): string {
-    return this.tasaCambio.toFixed(
-      dec ? this._monedaCambio.numeroDecimales : dec
-    );
   }
 
   // public set importeCambio(val: number) {
@@ -88,50 +93,68 @@ export class Importe {
   public set monedaCambio(val: Moneda) {
     this._monedaCambio = val;
     this.f_obtenerTasaCambio();
+    this.f_calcularCambio(this._importeCambio);
+    this._importeCambio = this.f_calcularCambio(this._importe);
   }
 
   public get monedaCambio(): Moneda {
     return this._monedaCambio;
   }
 
-  private f_obtenerTasaCambio(): void {
-    if (this._monedaCambio.codigoIso === 'ARS') {
+  private f_obtenerTasaCambio(
+    p_monedaOrigen?: string,
+    p_monedaDestino?: string
+  ): void {
+    if (p_monedaOrigen == null) {
+      p_monedaOrigen = this._moneda.codigoIso;
+    }
+    if (p_monedaDestino == null) {
+      p_monedaDestino = this._monedaCambio.codigoIso;
+    }
+
+    if (p_monedaDestino === 'ARS') {
       // Calculamos de la MONEDA a ARS de forma directa
       // No hay una funcion para redondear decimales Math.round() solo redondea a enteros
       // hay que usar .toFixed que transforma el número en una cadena por eso luego hay que
       // volverlo a convertir en númerico con el +(string)
-      this._tasaCambio = +(
-        1 / gl_tasas.f_obtenerTasa(this._moneda.codigoIso)
-      ).toFixed(6);
+      this._tasaCambio = +(1 / gl_tasas.f_obtenerTasa(p_monedaOrigen)).toFixed(
+        6
+      );
     } else {
       /**
        * De EUR a USD => EUR --> ARS --> USD
        */
       // EUR a ARS
       let monInicial2monBase: number = +(
-        1 / gl_tasas.f_obtenerTasa(this._moneda.codigoIso)
+        1 / gl_tasas.f_obtenerTasa(p_monedaOrigen)
       ).toFixed(6);
 
       // ARS a USD
       let monBase2monFinal: number = +gl_tasas
-        .f_obtenerTasa(this._monedaCambio.codigoIso)
+        .f_obtenerTasa(p_monedaDestino)
         .toFixed(6);
 
       this._tasaCambio = monInicial2monBase * monBase2monFinal;
     }
-
-    this.f_calcularCambio();
   }
 
-  private f_calcularCambio(): void {
-    if (this._importe == null) {
-      this._importeCambio = 0;
+  private f_calcularCambio(p_importe: number): number {
+    if (p_importe == null) {
+      return null;
     } else {
-      this._importeCambio = this._importe * this._tasaCambio;
-    }
+      p_importe = p_importe * this._tasaCambio;
 
-    this._importeCambio = +this.importeCambio.toFixed(
-      this._monedaCambio.numeroDecimales
+      return +p_importe.toFixed(this._monedaCambio.numeroDecimales);
+    }
+  }
+
+  public f_printTasaCambio(dec: number): string {
+    return this.tasaCambio.toFixed(
+      dec
+        ? this.tasaCambio < 0.1
+          ? 6
+          : this._monedaCambio.numeroDecimales
+        : dec
     );
   }
 
@@ -140,7 +163,7 @@ export class Importe {
     mascara.resolve(this._importe.toString());
     return mascara.value;
   }
-  
+
   public f_printImporteCambio(): string {
     let mascara = IMask.createMask({ mask: Number, thousandsSeparator: '.' });
     mascara.resolve(this._importeCambio.toString());

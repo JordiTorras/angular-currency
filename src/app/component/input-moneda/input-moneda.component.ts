@@ -1,6 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  OnChanges,
+  SimpleChange,
+} from '@angular/core';
 
-import { Importe } from '../../class/importe';
+import { Importe } from 'src/app/class/importe';
+import { Moneda } from 'src/app/class/moneda';
 // Usamos directamente la libreria javascript, no se como importarla de angular-imask
 import IMask from 'imask';
 
@@ -22,21 +30,52 @@ export class InputMonedaComponent implements OnInit {
   patt = new RegExp(this.validar_moneda_regex, 'g');
   b_importeCorrecto: boolean = true;
 
+  //TODO: L'hi passar un objecte moneda?, si pero aleshores el SimpleChange no funciona
+  // consultar https://www.it-swarm.dev/es/angular/como-detectar-cuando-un-valor-de-input-cambia-en-angular/827413320/
+  @Input()
+  input_moneda: string;
+
+  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
+    console.log(changes);
+    console.log(changes['input_moneda'].currentValue);
+
+    // Recorremos la clase SimpleChange para tratar todos los cambios
+    for (const propName in changes) {
+      const changedProp = changes[propName];
+      //const to = JSON.stringify(changedProp.currentValue);  /* Convierte un javascript object to a json string
+
+      switch (propName) {
+        case 'input_moneda':
+          this.importe.moneda = new Moneda(changedProp.currentValue);
+          if (this.__importe != null) {
+            this.__importe = this.importe.importe.toString(); // actualizamos el importe
+          }
+          break;
+      }
+    }
+  }
+
+  public __importe: string;
   public importe: Importe = new Importe(0, 'EUR');
-  public timporte: string;
+
   // tenemos que usar una variable string para el ngModel, no podemos usar
   // una variable numero como seria usar importe.importe y asi actualizar
   // directamente la instancia de la clase.
 
   public mask: any = {
-    mask: '€ num',
+    // https://imask.js.org/guide.html#masked-number
+    mask: this.importe.moneda.simbolo + ' num',
     blocks: {
       num: {
         // nested masks are available!
         mask: Number,
         thousandsSeparator: '.',
+        scale: this.importe.moneda.numeroDecimales,
+        normalizeZeros: false,
+        //padFractionalZeros: true,
+
         min: 0,
-        max: 10000000,
+        max: 10000000000,
       },
     },
   };
@@ -68,7 +107,7 @@ export class InputMonedaComponent implements OnInit {
   }
 
   public onChange(e): void {
-    this.importe.importe = +this.timporte;
+    this.importe.importe = +this.__importe;
     /**
      * no hace falta convertir de string a numero por que tenemos la pripiedad
      * [unmask] a true, es decir devolvemos el valor sin la mascara --> formato numerico
@@ -91,8 +130,8 @@ export class InputMonedaComponent implements OnInit {
     // let a = patt.test(this.importeTXT);
     // console.log('importe: ' + this.importeTXT + ' RegExp: ' + a);
 
-    this.b_importeCorrecto = this.patt.test(this.timporte);
-    this.importe.importe = Number(this.timporte);
+    this.b_importeCorrecto = this.patt.test(this.__importe);
+    this.importe.importe = Number(this.__importe);
 
     //this.importe.f_calcularCambio();
 

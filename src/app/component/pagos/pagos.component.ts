@@ -4,6 +4,7 @@ import {
   MonedasService,
   MonedasJsonService,
 } from 'src/app/services';
+import { Moneda } from 'src/app/class';
 
 @Component({
   selector: 'app-pagos',
@@ -11,7 +12,11 @@ import {
   styleUrls: ['./pagos.component.css'],
 })
 export class PagosComponent implements OnInit {
-  monedaSeleccionada: String = 'EUR';
+  monedaLiquidacion: Moneda = new Moneda('EUR');
+  monedaPago: Moneda = new Moneda('EUR');
+  monedaContable: Moneda = new Moneda('ARS');
+
+  iTotalLiquidacion: string;
 
   constructor(
     public listaMonedas: MonedasService,

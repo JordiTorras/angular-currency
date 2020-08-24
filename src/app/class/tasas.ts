@@ -16,6 +16,9 @@ export class Tasas {
   }
 
   f_obtenerTasa(p_moneda: string): number {
+    if (p_moneda === 'UF') {
+      return 0.000377;
+    }
     return this.tasas['2020-08-21'][p_moneda];
   }
 }

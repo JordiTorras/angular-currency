@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Rate, RateResponse, Tasas } from 'src/app/class/index';
+import { Rate, RateResponse } from 'src/app/class/cambio-response';
+import { Tasas } from 'src/app/class/tasas';
 
 export let gl_tasas: Tasas;
 

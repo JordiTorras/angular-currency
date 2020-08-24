@@ -13,6 +13,8 @@ export class Moneda {
   public nombre: string;
   public numeroDecimales: number;
   public simbolo: string;
+  public prefijo: string;
+  public sufijo: string;
 
   constructor(public p_codigoIso: string) {
     this.codigoIso = p_codigoIso;
@@ -32,6 +34,8 @@ export class Moneda {
     a.nombre = datos.nombre;
     a.numeroDecimales = datos.numeroDecimales;
     a.simbolo = datos.simbolo;
+    a.prefijo = datos.prefijo;
+    a.sufijo = datos.sufijo;
     return a;
   }
 
@@ -54,7 +58,9 @@ export class Moneda {
         this.nombre = gl_monedasJson[i].nombre;
         this.numeroDecimales = gl_monedasJson[i].numeroDecimales;
         this.simbolo = gl_monedasJson[i].simbolo;
+        this.prefijo = gl_monedasJson[i].prefijo;
+        this.sufijo = gl_monedasJson[i].sufijo;
       }
-    }    
+    }
   }
 }

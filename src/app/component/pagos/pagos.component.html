@@ -2,16 +2,40 @@
   <div class="row">
     <div class="col-md-12 themed-grid-col">
       pagos works! <br />
-      Lista de monedas (objeto): Cargado = {{ listaMonedas.cargada }}<br />      
-      Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}<br>
+      Lista de monedas (objeto): Cargado = {{ listaMonedas.cargada }}<br />
+      Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}<br />
       Lista de monedas (json): Cargado = {{ listaMonedasJson.cargada }}<br />
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12 themed-grid-col">
-      Moneda de liquidación:
-      <select name="miselect" [(ngModel)]="monedaSeleccionada">
+      <label for="sel-monliq" class="mr-2">Moneda de liquidación:</label>
+      <select
+        id="sel-monliq"
+        [(ngModel)]="monedaLiquidacion.codigoIso"
+        class="mr-4"
+      >
+        <option
+          *ngFor="let item of listaMonedasJson.monedas"
+          [value]="item.codigoIso"
+          >{{ item.codigoIso }} {{ item.nombre }}</option
+        >
+      </select>
+      <label for="sel-monpag" class="mr-2">Moneda de pago: </label>
+      <select id="sel-monpag" [(ngModel)]="monedaPago.codigoIso" class="mr-4">
+        <option
+          *ngFor="let item of listaMonedasJson.monedas"
+          [value]="item.codigoIso"
+          >{{ item.codigoIso }} {{ item.nombre }}</option
+        >
+      </select>
+      <label for="sel-monliq" class="mr-2">Moneda contable: </label>
+      <select
+        id="sel-monliq"
+        [(ngModel)]="monedaContable.codigoIso"
+        class="mr-4"
+      >
         <option
           *ngFor="let item of listaMonedasJson.monedas"
           [value]="item.codigoIso"
@@ -19,26 +43,20 @@
         >
       </select>
       <br />
-      {{ monedaSeleccionada }}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="div col-md-6 themed-grid-col">
-      .div col-md-6
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">
-          .div col-md-4
-        </div>
-        <div class="div col-md-8 themed-grid-col">
-          .div col-md-8
-        </div>
+      <span>
+        Importe resultante de la liquidación:
+      </span>
+      <div>
+        <app-input-moneda
+          id="iLiquidacion"
+          [input_moneda]="monedaLiquidacion.codigoIso"
+        ></app-input-moneda>
       </div>
     </div>
-    <div class="div col-md-6 themed-grid-col">
-      .div col-md-6
-    </div>
   </div>
+  {{ monedaLiquidacion.codigoIso }}
+  {{ monedaPago.codigoIso }}
+  {{ monedaContable.codigoIso }}
 
   <!--Tratando los campos de totales como si fueran una lista (generacion dinamica) -->
   <!-- <div class="row">
@@ -79,7 +97,9 @@
           Importe bruto:
         </div>
         <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda id="iBruto"></app-input-moneda>
+          <app-input-moneda
+            [input_moneda]="monedaPago.codigoIso"
+          ></app-input-moneda>
         </div>
       </div>
       <div class="row">
@@ -87,7 +107,9 @@
           Deducible:
         </div>
         <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda></app-input-moneda>
+          <app-input-moneda
+            [input_moneda]="monedaPago.codigoIso"
+          ></app-input-moneda>
         </div>
       </div>
     </div>
@@ -140,4 +162,21 @@
     <app-input-moneda></app-input-moneda>
   </div>
 </div> -->
+  <br />
+  <div class="row">
+    <div class="div col-md-6 themed-grid-col">
+      .div col-md-6
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">
+          .div col-md-4
+        </div>
+        <div class="div col-md-8 themed-grid-col">
+          .div col-md-8
+        </div>
+      </div>
+    </div>
+    <div class="div col-md-6 themed-grid-col">
+      .div col-md-6
+    </div>
+  </div>
 </div>
