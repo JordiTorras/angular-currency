@@ -1,5 +1,8 @@
 <div class="input-group input-group-sm">
-  <div class="input-group-prepend">
+  <div
+    class="input-group-prepend"
+    *ngIf="!input_selectorMoneda; else selectorMoneda"
+  >
     <span class="input-group-text">{{ importe.moneda.codigoIso }}</span>
   </div>
   <input
@@ -34,3 +37,15 @@
   {{ importe.f_printImporteCambio() }} {{ importe.monedaCambio.codigoIso }}
 </span>
 {{ input_moneda }}
+
+<ng-template #selectorMoneda>
+  <div>
+    <select [(ngModel)]="importe.moneda.codigoIso">
+      <option
+        *ngFor="let item of listaMonedasJson.monedas"
+        [value]="item.codigoIso"
+        >{{ item.codigoIso }}</option
+      >
+    </select>
+  </div>
+</ng-template>

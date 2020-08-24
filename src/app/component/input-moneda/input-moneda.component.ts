@@ -7,8 +7,10 @@ import {
   SimpleChange,
 } from '@angular/core';
 
+import { MonedasJsonService } from 'src/app/services';
 import { Importe } from 'src/app/class/importe';
 import { Moneda } from 'src/app/class/moneda';
+
 // Usamos directamente la libreria javascript, no se como importarla de angular-imask
 import IMask from 'imask';
 
@@ -34,10 +36,12 @@ export class InputMonedaComponent implements OnInit {
   // consultar https://www.it-swarm.dev/es/angular/como-detectar-cuando-un-valor-de-input-cambia-en-angular/827413320/
   @Input()
   input_moneda: string;
+  @Input()
+  input_selectorMoneda: boolean = true;
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-    console.log(changes);
-    console.log(changes['input_moneda'].currentValue);
+    // console.log(changes);
+    // console.log(changes['input_moneda'].currentValue);
 
     // Recorremos la clase SimpleChange para tratar todos los cambios
     for (const propName in changes) {
@@ -79,6 +83,8 @@ export class InputMonedaComponent implements OnInit {
       },
     },
   };
+
+  constructor(public listaMonedasJson: MonedasJsonService) {}
 
   ngOnInit(): void {}
 

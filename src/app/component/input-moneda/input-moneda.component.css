@@ -28,3 +28,10 @@
 #sublista-moneda > li:not(:last-child) {
   margin-right: 30px;
 }
+
+select {
+  height: 31px;
+  background-color: #dddddd;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
