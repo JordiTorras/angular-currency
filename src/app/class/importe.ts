@@ -1,7 +1,7 @@
 // import { AppInjector } from 'src/app/app.module';
 import { gl_tasas } from 'src/app/services/cambio.service';
 import { Moneda } from './moneda';
-import IMask from 'imask';
+// import IMask from 'imask';
 
 // const servicioTasas = AppInjector.get(CambioService);
 
@@ -12,6 +12,7 @@ export class Importe {
   private _tasaCambio: number;
   private _importeCambio: number;
   private _monedaCambio: Moneda;
+  //   private _importeMask: string;
 
   //servicioTasas = AppInjector.get(CambioService);
 
@@ -23,6 +24,7 @@ export class Importe {
     this.f_setFechaCambio(p_fecha); // hay que crear una funcion por que no se puede usar el SET
     this.f_obtenerTasaCambio();
     this._importeCambio = this.f_calcularCambio(p_importe);
+    // console.log('constructor importe' + ' ' + this._importe);
   }
 
   public set importe(val: number) {
@@ -74,7 +76,6 @@ export class Importe {
      */
     this._tasaCambio = val;
     this._fechaCambio = new Date();
-    this.f_calcularCambio(this._importeCambio);
     this._importeCambio = this.f_calcularCambio(this._importe);
   }
 
@@ -93,7 +94,6 @@ export class Importe {
   public set monedaCambio(val: Moneda) {
     this._monedaCambio = val;
     this.f_obtenerTasaCambio();
-    this.f_calcularCambio(this._importeCambio);
     this._importeCambio = this.f_calcularCambio(this._importe);
   }
 
@@ -148,7 +148,7 @@ export class Importe {
     }
   }
 
-  public f_printTasaCambio(dec: number): string {
+  /* public f_printTasaCambio(dec: number): string {
     return this.tasaCambio.toFixed(
       dec
         ? this.tasaCambio < 0.1
@@ -159,14 +159,34 @@ export class Importe {
   }
 
   public f_printImporte(): string {
-    let mascara = IMask.createMask({ mask: Number, thousandsSeparator: '.' });
+    let mascara = IMask.createMask({
+      mask: Number,
+      thousandsSeparator: '.',
+      scale: this._moneda.numeroDecimales,
+    });
     mascara.resolve(this._importe.toString());
     return mascara.value;
   }
 
   public f_printImporteCambio(): string {
-    let mascara = IMask.createMask({ mask: Number, thousandsSeparator: '.' });
+    let mascara = IMask.createMask({
+      mask: Number,
+      thousandsSeparator: '.',
+      scale: this._monedaCambio.numeroDecimales,
+    });
     mascara.resolve(this._importeCambio.toString());
     return mascara.value;
+  } */
+
+  /* public set importeMask(val: string) {
+    this._importeMask = val;
+    this._importe = +this._importeMask;
+    this._importeCambio = this.f_calcularCambio(this._importe);
+
+    console.log(this._importeMask + ' ' + this._importe);
   }
+
+  public get importeMask() {
+    return this._importeMask;
+  } */
 }

@@ -8,11 +8,12 @@ import {
 } from '@angular/core';
 
 import { MonedasJsonService } from 'src/app/services';
-import { Importe } from 'src/app/class/importe';
+import { ImporteComponente } from 'src/app/component/input-moneda/ImporteComponente';
 import { Moneda } from 'src/app/class/moneda';
 
 // Usamos directamente la libreria javascript, no se como importarla de angular-imask
 import IMask from 'imask';
+import { Importe } from 'src/app/class/importe';
 
 @Component({
   selector: 'app-input-moneda',
@@ -35,9 +36,14 @@ export class InputMonedaComponent implements OnInit {
   //TODO: L'hi passar un objecte moneda?, si pero aleshores el SimpleChange no funciona
   // consultar https://www.it-swarm.dev/es/angular/como-detectar-cuando-un-valor-de-input-cambia-en-angular/827413320/
   @Input()
+  input_importe: number;
+  @Input()
   input_moneda: string;
   @Input()
-  input_selectorMoneda: boolean = true;
+  input_selectorMoneda: boolean = false;
+  //TODO: passar un objecte complexe
+  //   @Input()
+  //   input_obj_importe: any;
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
     // console.log(changes);
@@ -48,19 +54,22 @@ export class InputMonedaComponent implements OnInit {
       const changedProp = changes[propName];
       //const to = JSON.stringify(changedProp.currentValue);  /* Convierte un javascript object to a json string
 
-      switch (propName) {
+      //console.log(propName);
+
+      /* switch (propName) {
         case 'input_moneda':
           this.importe.moneda = new Moneda(changedProp.currentValue);
           if (this.__importe != null) {
             this.__importe = this.importe.importe.toString(); // actualizamos el importe
           }
           break;
-      }
+      } */
     }
   }
 
-  public __importe: string;
-  public importe: Importe = new Importe(0, 'EUR');
+  public __importe: string; /* Deplecated  */
+  public __moneda: string; /* Deplecated  */
+  public importe: ImporteComponente = new ImporteComponente(null, 'EUR');
 
   // tenemos que usar una variable string para el ngModel, no podemos usar
   // una variable numero como seria usar importe.importe y asi actualizar
@@ -76,7 +85,7 @@ export class InputMonedaComponent implements OnInit {
         thousandsSeparator: '.',
         scale: this.importe.moneda.numeroDecimales,
         normalizeZeros: false,
-        //padFractionalZeros: true,
+        padFractionalZeros: true,
 
         min: 0,
         max: 10000000000,
@@ -86,7 +95,25 @@ export class InputMonedaComponent implements OnInit {
 
   constructor(public listaMonedasJson: MonedasJsonService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('ngOnInit');
+    console.log(this.input_importe + ' ' + this.input_moneda);
+
+    if (this.input_importe) {
+      this.importe.importe = +this.input_importe;
+    }
+    if (this.input_moneda) {
+      this.importe.moneda = new Moneda(this.input_moneda);
+    }
+    //FIXME: en el OnInit el objete input_obj_importe es un undefined
+    //console.log(this.input_obj_importe);
+  }
+
+  ngAfterViewInit(): void {
+    console.log('ngAferViewInit');
+    console.log(this.input_importe + ' ' + this.input_moneda);
+    //console.log(this.__moneda);
+  }
 
   public onFocus() {
     console.log('focus');
@@ -113,7 +140,7 @@ export class InputMonedaComponent implements OnInit {
   }
 
   public onChange(e): void {
-    this.importe.importe = +this.__importe;
+    //this.importe.importe = +this.__importe;
     /**
      * no hace falta convertir de string a numero por que tenemos la pripiedad
      * [unmask] a true, es decir devolvemos el valor sin la mascara --> formato numerico
@@ -121,6 +148,22 @@ export class InputMonedaComponent implements OnInit {
      * para trasnformar un string a numero
      *  var x = "32";
      *  var y: number = +x;
+     */
+    /**
+     * ya no hace falta controlar el evento onChange lo hemos sutituido por las funciones SETTER y GETTER
+     * para ello hemos creado una nueva clase ImporteComponente que extiende de Importe, en esta clase
+     * hemos creado un nuevo atributo ImporteMask de tipo TXT, se llama Mask pero no contiene la mascara, por que
+     * tenemos el atributo [unmask] = true
+     *
+     * HTML                                             COMPONENTE                         CLASE
+     * <input [(ngModel)]="importe.importeMask" /> -->  importe: importeComponente   -->   SET importeMask()
+     *
+     * de esta forma el ngModel, cuando se actualizar el campo del input llama al SETTER de importe.importeMask
+     * directamente, y no tenemos que hacer el paso que haciamos anteriormente
+     *
+     * * HTML                                             COMPONENTE                         CLASE
+     * <input [(ngModel)]="__importe" /> -->  onChange(function() this.importe.importe = +this.__importe;)
+     * de esta forma todo el componente muestra la inforamción directamente desde la clase importe
      */
   }
 
@@ -157,4 +200,29 @@ export class InputMonedaComponent implements OnInit {
   }
 
   public onComplete() {}
+
+  f_monedaModificada() {
+    /* this.importe.moneda = new Moneda(this.__moneda);
+    if (this.__importe != null) {
+      this.__importe = this.importe.importe.toString(); // actualizamos el importe
+    }
+
+    this.mask = {
+      // https://imask.js.org/guide.html#masked-number
+      mask: this.importe.moneda.simbolo + ' num',
+      blocks: {
+        num: {
+          // nested masks are available!
+          mask: Number,
+          thousandsSeparator: '.',
+          scale: this.importe.moneda.numeroDecimales,
+          normalizeZeros: false,
+          padFractionalZeros: true,
+
+          min: 0,
+          max: 10000000000,
+        },
+      },
+    };*/
+  }
 }

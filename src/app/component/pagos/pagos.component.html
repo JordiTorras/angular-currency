@@ -10,6 +10,7 @@
 
   <div class="row">
     <div class="col-md-12 themed-grid-col">
+      <!-- Moneda de liquidacion -->
       <label for="sel-monliq" class="mr-2">Moneda de liquidación:</label>
       <select
         id="sel-monliq"
@@ -22,7 +23,8 @@
           >{{ item.codigoIso }} {{ item.nombre }}</option
         >
       </select>
-      <label for="sel-monpag" class="mr-2">Moneda de pago: </label>
+      <!-- Moneda de pago -->
+      <label for="sel-monpag" class="mr-2">Moneda de pago y reserva: </label>
       <select id="sel-monpag" [(ngModel)]="monedaPago.codigoIso" class="mr-4">
         <option
           *ngFor="let item of listaMonedasJson.monedas"
@@ -30,6 +32,7 @@
           >{{ item.codigoIso }} {{ item.nombre }}</option
         >
       </select>
+      <!-- Moneda contable -->
       <label for="sel-monliq" class="mr-2">Moneda contable: </label>
       <select
         id="sel-monliq"
@@ -43,20 +46,19 @@
         >
       </select>
       <br />
+      <!-- Resultado de la liquidación -->
       <span>
         Importe resultante de la liquidación:
       </span>
       <div>
         <app-input-moneda
-          id="iLiquidacion"
+          [input_importe]="10.5"
           [input_moneda]="monedaLiquidacion.codigoIso"
+          [input_selectorMoneda]="true"
         ></app-input-moneda>
       </div>
     </div>
   </div>
-  {{ monedaLiquidacion.codigoIso }}
-  {{ monedaPago.codigoIso }}
-  {{ monedaContable.codigoIso }}
 
   <!--Tratando los campos de totales como si fueran una lista (generacion dinamica) -->
   <!-- <div class="row">

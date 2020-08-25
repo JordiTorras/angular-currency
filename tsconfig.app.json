@@ -8,9 +8,8 @@
   "files": [
     "src/main.ts",
     "src/polyfills.ts",
-    "src/app/class/moneda.ts"
+    "src/app/class/moneda.ts",
+    "./src/app/component/input-moneda/ImporteComponente.ts"
   ],
-  "include": [
-    "src/**/*.d.ts"
-  ]
+  "include": ["src/**/*.d.ts"]
 }

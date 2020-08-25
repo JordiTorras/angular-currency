@@ -10,25 +10,13 @@
     class="form-control"
     style="text-align: right;"
     placeholder="Introduzca un importe"
-    [(ngModel)]="__importe"
+    [(ngModel)]="importe.importeMask"
     (ngModelChange)="onChange($event)"
     [imask]="mask"
     [unmask]="true"
-    (focus)="onFocus()"
     (blur)="onBlur()"
-    (complete)="onComplete()"
   />
 </div>
-<!-- <ul
-  class="list-group list-group-horizontal-sm list-unstyled float-right input-moneda-contravalor"
-  id="sublista-moneda"
->
-  <li>
-    (1 {{ importe.monedaMonCia }} = {{ importe.tasaCambio }}
-    {{ importe.monedaMonCia }})
-  </li>
-  <li>{{ importe.importeMonCia }} {{ importe.monedaMonCia }}</li>
-</ul> -->
 <span class="float-left input-moneda-contravalor">
   (1 {{ importe.moneda.codigoIso }} = {{ importe.f_printTasaCambio(2) }}
   {{ importe.monedaCambio.codigoIso }})
@@ -36,7 +24,6 @@
 <span class="float-right input-moneda-contravalor">
   {{ importe.f_printImporteCambio() }} {{ importe.monedaCambio.codigoIso }}
 </span>
-{{ input_moneda }}
 
 <ng-template #selectorMoneda>
   <div>
