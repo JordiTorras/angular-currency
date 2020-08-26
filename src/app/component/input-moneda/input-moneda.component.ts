@@ -54,12 +54,15 @@ export class InputMonedaComponent implements OnInit {
       const changedProp = changes[propName];
       //const to = JSON.stringify(changedProp.currentValue);  /* Convierte un javascript object to a json string
 
-      //console.log(propName);
+      console.log(propName);
 
       /* switch (propName) {
+        case 'input_importe':
+          this.importe.importeMask = changedProp.currentValue;
+          break;
         case 'input_moneda':
           this.importe.moneda = new Moneda(changedProp.currentValue);
-          if (this.__importe != null) {
+          if (this.importe.importeMask != null) {
             this.__importe = this.importe.importe.toString(); // actualizamos el importe
           }
           break;
@@ -112,7 +115,6 @@ export class InputMonedaComponent implements OnInit {
   ngAfterViewInit(): void {
     console.log('ngAferViewInit');
     console.log(this.input_importe + ' ' + this.input_moneda);
-    //console.log(this.__moneda);
   }
 
   public onFocus() {
@@ -201,28 +203,28 @@ export class InputMonedaComponent implements OnInit {
 
   public onComplete() {}
 
-  f_monedaModificada() {
-    /* this.importe.moneda = new Moneda(this.__moneda);
-    if (this.__importe != null) {
-      this.__importe = this.importe.importe.toString(); // actualizamos el importe
-    }
+  //   f_monedaModificada() {
+  //     /* this.importe.moneda = new Moneda(this.__moneda);
+  //     if (this.__importe != null) {
+  //       this.__importe = this.importe.importe.toString(); // actualizamos el importe
+  //     }
 
-    this.mask = {
-      // https://imask.js.org/guide.html#masked-number
-      mask: this.importe.moneda.simbolo + ' num',
-      blocks: {
-        num: {
-          // nested masks are available!
-          mask: Number,
-          thousandsSeparator: '.',
-          scale: this.importe.moneda.numeroDecimales,
-          normalizeZeros: false,
-          padFractionalZeros: true,
+  //     this.mask = {
+  //       // https://imask.js.org/guide.html#masked-number
+  //       mask: this.importe.moneda.simbolo + ' num',
+  //       blocks: {
+  //         num: {
+  //           // nested masks are available!
+  //           mask: Number,
+  //           thousandsSeparator: '.',
+  //           scale: this.importe.moneda.numeroDecimales,
+  //           normalizeZeros: false,
+  //           padFractionalZeros: true,
 
-          min: 0,
-          max: 10000000000,
-        },
-      },
-    };*/
-  }
+  //           min: 0,
+  //           max: 10000000000,
+  //         },
+  //       },
+  //     };*/
+  //   }
 }

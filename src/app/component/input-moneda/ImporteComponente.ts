@@ -1,6 +1,6 @@
 import { Importe } from 'src/app/class/importe';
+import { Moneda } from 'src/app/class/moneda';
 import IMask from 'imask';
-import { ElementSchemaRegistry } from '@angular/compiler';
 
 /**
  * Esta clase da soporte al componenete <app-input-moneda> para gestionar y
@@ -27,6 +27,31 @@ export class ImporteComponente extends Importe {
   public get importeMask() {
     return this._importeMask;
   }
+
+  public set importe(val: number) {
+    super.importe = val;
+    this.importeMask = val.toString();
+  }
+
+  /**
+   * Al crear el metodo set de moneda, a diferencia del set de importe que si funciona directamente
+   * se produce un error de ejecución no de compilación en
+   * public mask: any = {
+   *    mask: this.importe.moneda.simbolo + ' num',   --> Aqui se produce el error
+   *
+   * ERROR TypeError: Cannot read property 'simbolo' of undefined
+   *     at new InputMonedaComponent (input-moneda.component.ts:83)
+   *
+   *  por que no puede acceder directamente a las propiedad de la clase Moneda mediante el SET,
+   *  his.importe.moneda.simbolo
+   *  Soluciones crear una función f_setMoneda(val: Moneda) en lugar de un SETTER
+   *  o crear SETTERS y GETTERS en la clase moneda.
+   *  TODO: crar SETTERS y GETTERS en la clase Moneda
+   */
+  //   public set moneda(val: Moneda) {
+  //     super.moneda = val;
+  //     this.importeMask = super.importe.toString();
+  //   }
 
   public f_printTasaCambio(dec: number): string {
     return super.tasaCambio.toFixed(
