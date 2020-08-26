@@ -6,6 +6,7 @@ import {
 } from 'src/app/services';
 import { Moneda } from 'src/app/class';
 import { Importe } from 'src/app/class/importe';
+import { ImporteComponente } from '../input-moneda/ImporteComponente';
 
 @Component({
   selector: 'app-pagos',
@@ -17,19 +18,43 @@ export class PagosComponent implements OnInit {
   monedaPago: Moneda = new Moneda('EUR');
   monedaContable: Moneda = new Moneda('ARS');
 
-  private _iliquidacion: Importe = new Importe(
+  private _iliquidacion: ImporteComponente = new ImporteComponente(
     null,
     this.monedaLiquidacion.codigoIso,
     this.monedaPago.codigoIso
   );
-  private _ibruto: Importe = new Importe(null, this.monedaPago.codigoIso);
-  private _ideducible: Importe = new Importe(null, this.monedaPago.codigoIso);
-  private _icapital: Importe = new Importe(null, this.monedaPago.codigoIso);
-  private _ibase: Importe = new Importe(null, this.monedaPago.codigoIso);
-  private _iiva: Importe = new Importe(null, this.monedaPago.codigoIso);
-  private _ineto: Importe = new Importe(null, this.monedaPago.codigoIso);
-  private _ifranquicia: Importe = new Importe(null, this.monedaPago.codigoIso);
-  private _itotal: Importe = new Importe(null, this.monedaPago.codigoIso);
+  private _ibruto: ImporteComponente = new ImporteComponente(
+    null,
+    this.monedaPago.codigoIso
+  );
+  private _ideducible: ImporteComponente = new ImporteComponente(
+    null,
+    this.monedaPago.codigoIso
+  );
+  private _icapital: ImporteComponente = new ImporteComponente(
+    null,
+    this.monedaPago.codigoIso
+  );
+  private _ibase: ImporteComponente = new ImporteComponente(
+    null,
+    this.monedaPago.codigoIso
+  );
+  private _iiva: ImporteComponente = new ImporteComponente(
+    null,
+    this.monedaPago.codigoIso
+  );
+  private _ineto: ImporteComponente = new ImporteComponente(
+    null,
+    this.monedaPago.codigoIso
+  );
+  private _ifranquicia: ImporteComponente = new ImporteComponente(
+    null,
+    this.monedaPago.codigoIso
+  );
+  private _itotal: ImporteComponente = new ImporteComponente(
+    null,
+    this.monedaPago.codigoIso
+  );
 
   constructor(
     public listaMonedas: MonedasService,
@@ -52,66 +77,67 @@ export class PagosComponent implements OnInit {
      * Datos de la póliza
      */
     this._ideducible.importe = 20;
+    this._icapital;
   }
 
-  public get iLiquidacion(): Importe {
+  public get iLiquidacion(): ImporteComponente {
     return this._iliquidacion;
   }
-  public set iLiquidacion(value: Importe) {
+  public set iLiquidacion(value: ImporteComponente) {
     this._iliquidacion = value;
   }
 
-  public get iBruto(): Importe {
+  public get iBruto(): ImporteComponente {
     return this._ibruto;
   }
-  public set iBruto(value: Importe) {
+  public set iBruto(value: ImporteComponente) {
     this._ibruto = value;
   }
 
-  public get iDeducible(): Importe {
+  public get iDeducible(): ImporteComponente {
     return this._ideducible;
   }
-  public set iDeducible(value: Importe) {
+  public set iDeducible(value: ImporteComponente) {
     this._ideducible = value;
   }
 
-  public get iCapital(): Importe {
+  public get iCapital(): ImporteComponente {
     return this._icapital;
   }
-  public set iCapital(value: Importe) {
+  public set iCapital(value: ImporteComponente) {
     this._icapital = value;
   }
-  public get iBase(): Importe {
+  public get iBase(): ImporteComponente {
     return this._ibase;
   }
-  public set iBase(value: Importe) {
+  public set iBase(value: ImporteComponente) {
     this._ibase = value;
   }
 
-  public get iIva(): Importe {
+  public get iIva(): ImporteComponente {
     return this._iiva;
   }
-  public set iIva(value: Importe) {
+  public set iIva(value: ImporteComponente) {
     this._iiva = value;
   }
 
-  public get iNeto(): Importe {
+  public get iNeto(): ImporteComponente {
     return this._ineto;
   }
-  public set iNeto(value: Importe) {
+  public set iNeto(value: ImporteComponente) {
     this._ineto = value;
   }
 
-  public get iFranquicia(): Importe {
+  public get iFranquicia(): ImporteComponente {
     return this._ifranquicia;
   }
-  public set iFranquicia(value: Importe) {
+  public set iFranquicia(value: ImporteComponente) {
     this._ifranquicia = value;
   }
-  public get iTotal(): Importe {
+  public get iTotal(): ImporteComponente {
     return this._itotal;
   }
-  public set iTtotal(value: Importe) {
+  public set iTtotal(value: ImporteComponente) {
     this._itotal = value;
   }
 
@@ -119,7 +145,7 @@ export class PagosComponent implements OnInit {
     console.log('modificarImporte: ', e);
 
     this.iLiquidacion.importe = e; // estoy llamando al SETTER
-    this.iBruto.importe = e.toString(); /* la caja de Input es de tipo texto, espera un texto para
+    this.iBruto.importe = this.iLiquidacion.importeCambio; /* la caja de Input es de tipo texto, espera un texto para
     poder darle formato */
 
     this.f_calcularTotales();
@@ -127,23 +153,51 @@ export class PagosComponent implements OnInit {
 
   f_calcularTotales(): void {
     if (this._ibruto.importe != null) {
-      /* 
       // Calculo importe base
-      // iBase = Max((MAX(BRUTO - NVL(DEDUCIBLE), 0), NVL(CAPITAL))
-      this._ibase.importe = Math.max(
-        this._icapital.importe ? this._icapital.importe : 0,
+      // BASE = MIN((MAX(BRUTO - NVL(DEDUCIBLE, 0), 0), NVL(CAPITAL, ∞))
+
+      this._ibase.importe = Math.min(
+        this._icapital.importe ? this._icapital.importe : Infinity,
         Math.max(
           this._ibruto.importe - this._ideducible.importe
-            ? this._ideducible.importe
+            ? this._ibruto.importe - this._ideducible.importe
             : 0,
           0
         )
       );
 
       // Calculo impuestos
+      // IMPUESTOS = BASE * PORCENTAJE
+      this._iiva.importe = +((this._ibase.importe * 21) / 100).toPrecision(
+        this.iBase.moneda.numeroDecimales
+      );
+
+      // Calculo importe neto
+      // NETO = BASE + SUM(IMPUESTOS) + SUM(-RETENCIONES)
+      this._ineto.importe = this._ibase.importe + this._iiva.importe;
 
       // Calculo importe total
-      this._itotal.importe = this._ibase.importe; */
+      // SI (NETO > FRANQUICIA) => TOTAL = NETO  : TOTAL = 0 (retenido por franquicia)
+      if (
+        this._ineto.importe >=
+        (this._ifranquicia.importe ? this._ifranquicia.importe : 0)
+      ) {
+        this.iTotal.importe = this._ineto.importe;
+      } else {
+        this.iTotal.importe = 0;
+      }
     }
+
+    // TODO: Marcar visualmente los topes que no se superan, DEDUCIBLE, CAPITAL, FRANQUICIA
+
+    // TODO: La moneda de pago es EUR pero el simbolo que se muestra es $
+
+    // TODO: Mostrar mensajes de franquicia y deducible aplicados
+
+    // TODO: bloquear campos no editables de la sección de pagos
+
+    // TODO: Al editar deducible / franquicia recalcular totales
+
+    // TODO: IVA, selector de % de IVA
   }
 }

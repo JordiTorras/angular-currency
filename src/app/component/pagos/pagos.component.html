@@ -74,7 +74,7 @@
         <div class="div col-md-4 themed-grid-col">Importe bruto:</div>
         <div class="div col-md-8 themed-grid-col">
           <app-input-moneda
-            [input_importe]="iBruto.importe"
+            [input_importe]="iBruto.importeMask"
             [input_moneda]="monedaPago.codigoIso"
             [input_monedaCambio]="monedaContable.codigoIso"
           ></app-input-moneda>
@@ -83,10 +83,72 @@
 
       <!-- Deducible -->
       <div class="row">
-        <div class="div col-md-4 themed-grid-col">Deducible:</div>
+        <div class="div col-md-4 themed-grid-col">Deducible Pendiente:</div>
         <div class="div col-md-8 themed-grid-col">
           <app-input-moneda
-            [input_importe]="iDeducible.importe"
+            [input_importe]="iDeducible.importeMask"
+            [input_moneda]="monedaPago.codigoIso"
+            [input_monedaCambio]="monedaContable.codigoIso"
+          ></app-input-moneda>
+        </div>
+      </div>
+
+      <!-- Importe Capital Maxi -->
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">Capital pendiente:</div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda
+            [input_importe]="iCapital.importeMask"
+            [input_moneda]="monedaPago.codigoIso"
+            [input_monedaCambio]="monedaContable.codigoIso"
+          ></app-input-moneda>
+        </div>
+      </div>
+
+      <!-- Importe base -->
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">
+          Importe <base href="" />:
+        </div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda
+            [input_importe]="iBase.importeMask"
+            [input_moneda]="monedaPago.codigoIso"
+            [input_monedaCambio]="monedaContable.codigoIso"
+          ></app-input-moneda>
+        </div>
+      </div>
+
+      <!-- Importe Iva -->
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">IVA:</div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda
+            [input_importe]="iIva.importeMask"
+            [input_moneda]="monedaPago.codigoIso"
+            [input_monedaCambio]="monedaContable.codigoIso"
+          ></app-input-moneda>
+        </div>
+      </div>
+
+      <!-- Importe Neto -->
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">Importe Neto:</div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda
+            [input_importe]="iNeto.importeMask"
+            [input_moneda]="monedaPago.codigoIso"
+            [input_monedaCambio]="monedaContable.codigoIso"
+          ></app-input-moneda>
+        </div>
+      </div>
+
+      <!-- Importe Franquicia -->
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">Franquicia pendiente:</div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda
+            [input_importe]="iFranquicia.importeMask"
             [input_moneda]="monedaPago.codigoIso"
             [input_monedaCambio]="monedaContable.codigoIso"
           ></app-input-moneda>
@@ -98,7 +160,7 @@
         <div class="div col-md-4 themed-grid-col">Total a pagar:</div>
         <div class="div col-md-8 themed-grid-col">
           <app-input-moneda
-            [input_importe]="iTotal.importe"
+            [input_importe]="iTotal.importeMask"
             [input_moneda]="monedaPago.codigoIso"
             [input_monedaCambio]="monedaContable.codigoIso"
           ></app-input-moneda>
