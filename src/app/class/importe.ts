@@ -16,11 +16,22 @@ export class Importe {
 
   //servicioTasas = AppInjector.get(CambioService);
 
-  constructor(p_importe: number, p_moneda: string, p_fecha?: Date) {
+  constructor(
+    p_importe: number,
+    p_moneda: string,
+    p_monedaCambio?: string,
+    p_fecha?: Date
+  ) {
     this._importe = p_importe;
     this._moneda = new Moneda(p_moneda);
-    /* Peso Argentino --> moneda por defecto de la instalación */
-    this._monedaCambio = new Moneda('ARS');
+
+    if (p_monedaCambio) {
+      //TODO: provocar una excepción, verificar que la moneda exista en el constructor de Moneda
+      this._monedaCambio = new Moneda(p_monedaCambio);
+    } else {
+      /* Peso Argentino --> moneda por defecto de la instalación */
+      this._monedaCambio = new Moneda('ARS');
+    }
     this.f_setFechaCambio(p_fecha); // hay que crear una funcion por que no se puede usar el SET
     this.f_obtenerTasaCambio();
     this._importeCambio = this.f_calcularCambio(p_importe);

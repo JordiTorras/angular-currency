@@ -20,18 +20,22 @@
         <option
           *ngFor="let item of listaMonedasJson.monedas"
           [value]="item.codigoIso"
-          >{{ item.codigoIso }} {{ item.nombre }}</option
         >
+          {{ item.codigoIso }} {{ item.nombre }}
+        </option>
       </select>
+      <br />
       <!-- Moneda de pago -->
       <label for="sel-monpag" class="mr-2">Moneda de pago y reserva: </label>
       <select id="sel-monpag" [(ngModel)]="monedaPago.codigoIso" class="mr-4">
         <option
           *ngFor="let item of listaMonedasJson.monedas"
           [value]="item.codigoIso"
-          >{{ item.codigoIso }} {{ item.nombre }}</option
         >
+          {{ item.codigoIso }} {{ item.nombre }}
+        </option>
       </select>
+      <br />
       <!-- Moneda contable -->
       <label for="sel-monliq" class="mr-2">Moneda contable: </label>
       <select
@@ -42,22 +46,66 @@
         <option
           *ngFor="let item of listaMonedasJson.monedas"
           [value]="item.codigoIso"
-          >{{ item.codigoIso }} {{ item.nombre }}</option
         >
+          {{ item.codigoIso }} {{ item.nombre }}
+        </option>
       </select>
       <br />
       <!-- Resultado de la liquidación -->
-      <span>
-        Importe resultante de la liquidación:
-      </span>
+      <span> Importe resultante de la liquidación: </span>
       <div>
         <app-input-moneda
-          [input_importe]="10.5"
           [input_moneda]="monedaLiquidacion.codigoIso"
+          [input_monedaCambio]="monedaPago.codigoIso"
           [input_selectorMoneda]="true"
+          (EventoImporteCambiado)="f_ILiquidacionModificado($event)"
         ></app-input-moneda>
+        <!-- (EventoImporteCambiado)="f_ILiquidacionModificado($event)" 
+(EventoImporteModificado)="f_ILiquidacionModificado($event)"-->
       </div>
     </div>
+  </div>
+
+  <!--Tratando los campos de la seccion de totales como datos independientes -->
+  <div class="row">
+    <div class="div col-md-6 themed-grid-col">
+      <!-- Importe base -->
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">Importe bruto:</div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda
+            [input_importe]="iBruto.importe"
+            [input_moneda]="monedaPago.codigoIso"
+            [input_monedaCambio]="monedaContable.codigoIso"
+          ></app-input-moneda>
+        </div>
+      </div>
+
+      <!-- Deducible -->
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">Deducible:</div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda
+            [input_importe]="iDeducible.importe"
+            [input_moneda]="monedaPago.codigoIso"
+            [input_monedaCambio]="monedaContable.codigoIso"
+          ></app-input-moneda>
+        </div>
+      </div>
+
+      <!-- Importe final a pagar -->
+      <div class="row">
+        <div class="div col-md-4 themed-grid-col">Total a pagar:</div>
+        <div class="div col-md-8 themed-grid-col">
+          <app-input-moneda
+            [input_importe]="iTotal.importe"
+            [input_moneda]="monedaPago.codigoIso"
+            [input_monedaCambio]="monedaContable.codigoIso"
+          ></app-input-moneda>
+        </div>
+      </div>
+    </div>
+    <div class="div col-md-6 themed-grid-col">.div col-md-6</div>
   </div>
 
   <!--Tratando los campos de totales como si fueran una lista (generacion dinamica) -->
@@ -91,94 +139,15 @@
     </div>
   </div> -->
 
-  <!--Tratando los campos de totales como datos independientes -->
-  <div class="row">
-    <div class="div col-md-6 themed-grid-col">
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">
-          Importe bruto:
-        </div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_moneda]="monedaPago.codigoIso"
-          ></app-input-moneda>
-        </div>
-      </div>
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">
-          Deducible:
-        </div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_moneda]="monedaPago.codigoIso"
-          ></app-input-moneda>
-        </div>
-      </div>
-    </div>
-    <div class="div col-md-6 themed-grid-col">
-      .div col-md-6
-    </div>
-  </div>
-
-  <!-- <div class="col-md-6 themed-grid-col">
-        <div class="col-md-2 themed-grid-col">
-          <label for="iBruto">Importe bruto</label>
-        </div>
-        <div class="col-md-4 themed-grid-col">
-          <app-input-moneda></app-input-moneda>
-        </div>
-      </div>
-      <div class="col-md-6 themed-grid-col">
-        <label for="iBruto">Importe bruto</label>
-        <app-input-moneda></app-input-moneda>
-      </div>
-    </div>  -->
-
-  <!-- <div class="container">
-  <div class="form-group">
-    <label for="iBruto">Importe bruto</label>
-    <app-input-moneda></app-input-moneda>
-  </div>
-  <div class="form-group">
-    <label for="iDeducible">Importe deducible:</label>
-    <app-input-moneda></app-input-moneda>
-  </div>
-  <div class="form-group">
-    <label for="iBase">Importe base</label>
-    <app-input-moneda></app-input-moneda>
-  </div>
-  <div class="form-group">
-    <label for="iIVA">IVA</label>
-    <app-input-moneda></app-input-moneda>
-  </div>
-  <div class="form-group">
-    <label for="iNeto">Importe Neto</label>
-    <app-input-moneda></app-input-moneda>
-  </div>
-  <div class="form-group">
-    <label for="iFranquicia">Importe franquicia</label>
-    <app-input-moneda></app-input-moneda>
-  </div>
-  <div class="form-group">
-    <label for="iTotal">Importe final</label>
-    <app-input-moneda></app-input-moneda>
-  </div>
-</div> -->
   <br />
   <div class="row">
     <div class="div col-md-6 themed-grid-col">
       .div col-md-6
       <div class="row">
-        <div class="div col-md-4 themed-grid-col">
-          .div col-md-4
-        </div>
-        <div class="div col-md-8 themed-grid-col">
-          .div col-md-8
-        </div>
+        <div class="div col-md-4 themed-grid-col">.div col-md-4</div>
+        <div class="div col-md-8 themed-grid-col">.div col-md-8</div>
       </div>
     </div>
-    <div class="div col-md-6 themed-grid-col">
-      .div col-md-6
-    </div>
+    <div class="div col-md-6 themed-grid-col">.div col-md-6</div>
   </div>
 </div>

@@ -21,7 +21,10 @@
 
 <!-- (ngModelChange)="onChange($event)" -->
 
-<span class="float-left input-moneda-contravalor">
+<span
+  class="float-left input-moneda-contravalor"
+  *ngIf="_importe.moneda.codigoIso != _importe.monedaCambio.codigoIso"
+>
   (1 {{ _importe.moneda.codigoIso }} = {{ _importe.f_printTasaCambio(2) }}
   {{ _importe.monedaCambio.codigoIso }})
 </span>

@@ -3,7 +3,7 @@ import {
   OnInit,
   Input,
   Output,
-  OnChanges,
+  EventEmitter,
   SimpleChange,
 } from '@angular/core';
 
@@ -13,8 +13,6 @@ import { Moneda } from 'src/app/class/moneda';
 
 // Usamos directamente la libreria javascript, no se como importarla de angular-imask
 import IMask from 'imask';
-import { Importe } from 'src/app/class/importe';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-input-moneda',
@@ -41,10 +39,19 @@ export class InputMonedaComponent implements OnInit {
   @Input()
   input_moneda: string;
   @Input()
+  input_monedaCambio: string;
+
+  @Input()
   input_selectorMoneda: boolean = false;
   //TODO: passar un objecte complexe
   //   @Input()
   //   input_obj_importe: any;
+
+  @Output()
+  EventoImporteModificado = new EventEmitter<number>();
+
+  @Output()
+  EventoImporteCambiado = new EventEmitter<number>();
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
     // console.log(changes);
@@ -55,7 +62,7 @@ export class InputMonedaComponent implements OnInit {
       const changedProp = changes[propName];
       //const to = JSON.stringify(changedProp.currentValue);  /* Convierte un javascript object to a json string
 
-      console.log(propName);
+      //   console.log(propName);
 
       switch (propName) {
         case 'input_importe':
@@ -79,13 +86,19 @@ export class InputMonedaComponent implements OnInit {
             },
           }; */
           break;
+        case 'input_monedaCambio':
+          this.cmonedaCambio = changedProp.currentValue;
+          break;
       }
     }
   }
 
   public __importe: string; /* Deplecated  */
   public __moneda: string; /* Deplecated  */
-  public _importe: ImporteComponente = new ImporteComponente(null, 'EUR');
+  public _importe: ImporteComponente = new ImporteComponente(
+    null,
+    'ARS' /* moneda por defecto */
+  );
 
   // tenemos que usar una variable string para el ngModel, no podemos usar
   // una variable numero como seria usar importe.importe y asi actualizar
@@ -122,6 +135,9 @@ export class InputMonedaComponent implements OnInit {
     if (this.input_moneda) {
       this._importe.moneda = new Moneda(this.input_moneda);
     }
+    if (this.input_monedaCambio) {
+      this._importe.monedaCambio = new Moneda(this.input_monedaCambio);
+    }
     //FIXME: en el OnInit el objete input_obj_importe es un undefined
     //console.log(this.input_obj_importe);
   }
@@ -155,6 +171,10 @@ export class InputMonedaComponent implements OnInit {
     // }
     // console.log('masked.value: ' + mascara.value);
     // console.log('masked.unmaskedValue: ' + mascara.unmaskedValue);
+
+    // Emitimos el evento de importe cambiado cuando salimos de la caja
+    console.log('onBlur ', this._importe.importe);
+    this.EventoImporteCambiado.emit(this._importe.importe);
   }
 
   public onChange(e: any): void {
@@ -183,6 +203,9 @@ export class InputMonedaComponent implements OnInit {
      * <input [(ngModel)]="__importe" /> -->  onChange(function() this.importe.importe = +this.__importe;)
      * de esta forma todo el componente muestra la inforamción directamente desde la clase importe
      */
+
+    //console.log('onChange ', this._importe.importe, ' e: ', e);
+    this.EventoImporteModificado.emit(this._importe.importe);
   }
 
   /** 
@@ -246,5 +269,16 @@ export class InputMonedaComponent implements OnInit {
 
   public get cmoneda(): string {
     return this._importe.moneda.codigoIso;
+  }
+
+  public set cmonedaCambio(val: string) {
+    this._importe.monedaCambio = new Moneda(val);
+    this._importe.importeMask = this._importe.importe
+      ? this._importe.importe.toString()
+      : null;
+  }
+
+  public get cmonedaCambio(): string {
+    return this._importe.monedaCambio.codigoIso;
   }
 }

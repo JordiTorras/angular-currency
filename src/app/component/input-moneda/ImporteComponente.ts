@@ -10,8 +10,13 @@ import IMask from 'imask';
 export class ImporteComponente extends Importe {
   private _importeMask: string;
 
-  constructor(p_importe: number, p_moneda: string, p_fecha?: Date) {
-    super(p_importe, p_moneda, p_fecha);
+  constructor(
+    p_importe: number,
+    p_moneda: string,
+    p_monedaCambio?: string,
+    p_fecha?: Date
+  ) {
+    super(p_importe, p_moneda, p_monedaCambio, p_fecha);
     if (p_importe) {
       this._importeMask = p_importe.toString();
     }
