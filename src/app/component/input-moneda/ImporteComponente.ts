@@ -33,6 +33,10 @@ export class ImporteComponente extends Importe {
     this.importeMask = val.toString();
   }
 
+  public get importe(): number {
+    return super.importe;
+  }
+
   /**
    * Al crear el metodo set de moneda, a diferencia del set de importe que si funciona directamente
    * se produce un error de ejecución no de compilación en
@@ -46,12 +50,24 @@ export class ImporteComponente extends Importe {
    *  his.importe.moneda.simbolo
    *  Soluciones crear una función f_setMoneda(val: Moneda) en lugar de un SETTER
    *  o crear SETTERS y GETTERS en la clase moneda.
-   *  TODO: crar SETTERS y GETTERS en la clase Moneda
+   *  DONE: crar SETTERS y GETTERS en la clase Moneda
    */
-  //   public set moneda(val: Moneda) {
-  //     super.moneda = val;
-  //     this.importeMask = super.importe.toString();
-  //   }
+  /*   public f_setmoneda(val: string) {
+    super.moneda = new Moneda(val);
+    this.importeMask = super.importe ? super.importe.toString() : null;
+  } */
+
+  /**
+   * he movido los setteres y getters al input-moneda.component.ts
+   */
+  /* public set cmoneda(val: string) {
+    super.moneda = new Moneda(val);
+    this.importeMask = super.importe ? super.importe.toString() : null;
+  }
+
+  public get cmoneda(): string {
+    return super.moneda.codigoIso;
+  } */
 
   public f_printTasaCambio(dec: number): string {
     return super.tasaCambio.toFixed(
@@ -69,6 +85,7 @@ export class ImporteComponente extends Importe {
         mask: Number,
         thousandsSeparator: '.',
         scale: super.moneda.numeroDecimales,
+        signed: true,
       });
       mascara.resolve(super.importe.toString());
       return mascara.value;
@@ -83,6 +100,7 @@ export class ImporteComponente extends Importe {
         mask: Number,
         thousandsSeparator: '.',
         scale: super.monedaCambio.numeroDecimales,
+        signed: true,
       });
       mascara.resolve(super.importeCambio.toString());
       return mascara.value;

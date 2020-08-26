@@ -38,7 +38,7 @@ export class Importe {
 
   public set moneda(val: Moneda) {
     // Calculamos el importe en la nueva moneda
-    this.f_obtenerTasaCambio(this.moneda.codigoIso, val.codigoIso);
+    this.f_obtenerTasaCambio(this._moneda.codigoIso, val.codigoIso);
     this._importe = this.f_calcularCambio(this._importe);
 
     // Asignamos la nueva moneda

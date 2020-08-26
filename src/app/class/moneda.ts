@@ -16,7 +16,7 @@ export class Moneda {
   public prefijo: string;
   public sufijo: string;
 
-  constructor(public p_codigoIso: string) {
+  constructor(p_codigoIso: string) {
     this.codigoIso = p_codigoIso;
 
     this.f_getDatosMoneda(p_codigoIso);

@@ -14,6 +14,7 @@ import { Moneda } from 'src/app/class/moneda';
 // Usamos directamente la libreria javascript, no se como importarla de angular-imask
 import IMask from 'imask';
 import { Importe } from 'src/app/class/importe';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-input-moneda',
@@ -56,23 +57,35 @@ export class InputMonedaComponent implements OnInit {
 
       console.log(propName);
 
-      /* switch (propName) {
+      switch (propName) {
         case 'input_importe':
-          this.importe.importeMask = changedProp.currentValue;
+          this._importe.importeMask = changedProp.currentValue;
           break;
         case 'input_moneda':
-          this.importe.moneda = new Moneda(changedProp.currentValue);
-          if (this.importe.importeMask != null) {
-            this.__importe = this.importe.importe.toString(); // actualizamos el importe
-          }
+          this.cmoneda = changedProp.currentValue; // usamos el setter
+
+          // TODO: cambiar la mascara en función de la moneda
+          /* this.mask = {
+            mask: this._importe.moneda.simbolo + ' num',
+            blocks: {
+              num: {
+                // nested masks are available!
+                mask: Number,
+                thousandsSeparator: '.',
+                scale: this._importe.moneda.numeroDecimales,
+                normalizeZeros: false,
+                padFractionalZeros: true,
+              },
+            },
+          }; */
           break;
-      } */
+      }
     }
   }
 
   public __importe: string; /* Deplecated  */
   public __moneda: string; /* Deplecated  */
-  public importe: ImporteComponente = new ImporteComponente(null, 'EUR');
+  public _importe: ImporteComponente = new ImporteComponente(null, 'EUR');
 
   // tenemos que usar una variable string para el ngModel, no podemos usar
   // una variable numero como seria usar importe.importe y asi actualizar
@@ -80,18 +93,19 @@ export class InputMonedaComponent implements OnInit {
 
   public mask: any = {
     // https://imask.js.org/guide.html#masked-number
-    mask: this.importe.moneda.simbolo + ' num',
+    mask: this._importe.moneda.simbolo + ' num',
     blocks: {
       num: {
         // nested masks are available!
         mask: Number,
         thousandsSeparator: '.',
-        scale: this.importe.moneda.numeroDecimales,
+        scale: this._importe.moneda.numeroDecimales,
         normalizeZeros: false,
         padFractionalZeros: true,
+        signed: true,
 
-        min: 0,
-        max: 10000000000,
+        // min: 0,
+        // max: 10000000000,
       },
     },
   };
@@ -99,26 +113,26 @@ export class InputMonedaComponent implements OnInit {
   constructor(public listaMonedasJson: MonedasJsonService) {}
 
   ngOnInit(): void {
-    console.log('ngOnInit');
-    console.log(this.input_importe + ' ' + this.input_moneda);
+    //console.log('ngOnInit');
+    //console.log(this.input_importe + ' ' + this.input_moneda);
 
     if (this.input_importe) {
-      this.importe.importe = +this.input_importe;
+      this._importe.importe = +this.input_importe;
     }
     if (this.input_moneda) {
-      this.importe.moneda = new Moneda(this.input_moneda);
+      this._importe.moneda = new Moneda(this.input_moneda);
     }
     //FIXME: en el OnInit el objete input_obj_importe es un undefined
     //console.log(this.input_obj_importe);
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAferViewInit');
-    console.log(this.input_importe + ' ' + this.input_moneda);
+    //console.log('ngAferViewInit');
+    //console.log(this.input_importe + ' ' + this.input_moneda);
   }
 
   public onFocus() {
-    console.log('focus');
+    //console.log('focus');
   }
 
   public onBlur() {
@@ -135,13 +149,15 @@ export class InputMonedaComponent implements OnInit {
         // get unmasked value
         console.log(masked.unmaskedValue);
     */
-    let mascara = IMask.createMask(this.mask);
-    mascara.resolve(this.importe.importe.toString());
+    // if (this._importe != null) {
+    //   let mascara = IMask.createMask(this.mask);
+    //   mascara.resolve(this._importe.importeMask);
+    // }
     // console.log('masked.value: ' + mascara.value);
     // console.log('masked.unmaskedValue: ' + mascara.unmaskedValue);
   }
 
-  public onChange(e): void {
+  public onChange(e: any): void {
     //this.importe.importe = +this.__importe;
     /**
      * no hace falta convertir de string a numero por que tenemos la pripiedad
@@ -182,7 +198,7 @@ export class InputMonedaComponent implements OnInit {
     // console.log('importe: ' + this.importeTXT + ' RegExp: ' + a);
 
     this.b_importeCorrecto = this.patt.test(this.__importe);
-    this.importe.importe = Number(this.__importe);
+    this._importe.importe = Number(this.__importe);
 
     //this.importe.f_calcularCambio();
 
@@ -203,28 +219,32 @@ export class InputMonedaComponent implements OnInit {
 
   public onComplete() {}
 
-  //   f_monedaModificada() {
-  //     /* this.importe.moneda = new Moneda(this.__moneda);
-  //     if (this.__importe != null) {
-  //       this.__importe = this.importe.importe.toString(); // actualizamos el importe
-  //     }
+  public f_monedaModificada(p_cmoneda: string) {
+    //this.importe.f_setmoneda(p_cmoneda);
+    //this.importe.importe = 19;
+    /* this.mask = {
+      mask: this.importe.moneda.simbolo + ' num',
+      blocks: {
+        num: {
+          // nested masks are available!
+          mask: Number,
+          thousandsSeparator: '.',
+          scale: this.importe.moneda.numeroDecimales,
+          normalizeZeros: false,
+          padFractionalZeros: true,
+        },
+      },
+    }; */
+  }
 
-  //     this.mask = {
-  //       // https://imask.js.org/guide.html#masked-number
-  //       mask: this.importe.moneda.simbolo + ' num',
-  //       blocks: {
-  //         num: {
-  //           // nested masks are available!
-  //           mask: Number,
-  //           thousandsSeparator: '.',
-  //           scale: this.importe.moneda.numeroDecimales,
-  //           normalizeZeros: false,
-  //           padFractionalZeros: true,
+  public set cmoneda(val: string) {
+    this._importe.moneda = new Moneda(val);
+    this._importe.importeMask = this._importe.importe
+      ? this._importe.importe.toString()
+      : null;
+  }
 
-  //           min: 0,
-  //           max: 10000000000,
-  //         },
-  //       },
-  //     };*/
-  //   }
+  public get cmoneda(): string {
+    return this._importe.moneda.codigoIso;
+  }
 }
