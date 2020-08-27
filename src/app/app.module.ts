@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { InputMonedaComponent } from './component/input-moneda/input-moneda.component';
 import { PagosComponent } from './component/pagos/pagos.component';
 import { CambioService, MonedasService, MonedasJsonService } from './services';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 export function f_cargarTasasDeCambio(servicio: CambioService) {
   return () => servicio.f_obtenerTasaDeCambio();
@@ -26,7 +27,14 @@ export function f_cargarListaMonedasJson(servicio: MonedasJsonService) {
 
 @NgModule({
   declarations: [AppComponent, InputMonedaComponent, PagosComponent],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, IMaskModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    IMaskModule,
+    FontAwesomeModule,
+  ],
   providers: [
     {
       provide: APP_INITIALIZER,
@@ -49,7 +57,7 @@ export function f_cargarListaMonedasJson(servicio: MonedasJsonService) {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule{}
+export class AppModule {}
 /* export class AppModule {
   constructor(private injector: Injector) {
     AppInjector = this.injector;
@@ -64,7 +72,3 @@ export class AppModule{}
 
 //   }
 // }
-
-
-
-

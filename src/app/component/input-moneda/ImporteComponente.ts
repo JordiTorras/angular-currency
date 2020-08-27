@@ -85,32 +85,28 @@ export class ImporteComponente extends Importe {
   }
 
   public f_printImporte(): string {
-    if (super.importe) {
-      let mascara = IMask.createMask({
-        mask: Number,
-        thousandsSeparator: '.',
-        scale: super.moneda.numeroDecimales,
-        signed: true,
-      });
-      mascara.resolve(super.importe.toString());
-      return mascara.value;
-    } else {
-      return '';
-    }
+    return this.f_printImportes(super.importe, super.moneda.numeroDecimales);
   }
 
   public f_printImporteCambio(): string {
-    if (super.importeCambio) {
+    return this.f_printImportes(
+      super.importeCambio,
+      super.monedaCambio.numeroDecimales
+    );
+  }
+
+  public f_printImportes(p_importe: number, p_numDec: number): string {
+    if (p_importe === null || p_importe === undefined) {
+      return '';
+    } else {
       let mascara = IMask.createMask({
         mask: Number,
         thousandsSeparator: '.',
         scale: super.monedaCambio.numeroDecimales,
         signed: true,
       });
-      mascara.resolve(super.importeCambio.toString());
+      mascara.resolve(p_importe.toString());
       return mascara.value;
-    } else {
-      return '';
     }
   }
 }

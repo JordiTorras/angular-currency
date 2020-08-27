@@ -12,6 +12,7 @@
     placeholder="Introduzca un importe"
     [(ngModel)]="_importe.importeMask"
     (ngModelChange)="onChange($event)"
+    [disabled]="input_disabled"
     [imask]="mask"
     [unmask]="true"
     (blur)="onBlur()"

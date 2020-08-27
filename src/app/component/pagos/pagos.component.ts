@@ -5,8 +5,30 @@ import {
   MonedasJsonService,
 } from 'src/app/services';
 import { Moneda } from 'src/app/class';
-import { Importe } from 'src/app/class/importe';
 import { ImporteComponente } from '../input-moneda/ImporteComponente';
+
+// Iconos
+/**
+ * Como instalar
+ * https://www.npmjs.com/package/@fortawesome/angular-fontawesome
+ *
+ * Como usar
+ * https://github.com/FortAwesome/angular-fontawesome/blob/HEAD/docs/usage/features.md
+ * https://github.com/FortAwesome/angular-fontawesome/blob/HEAD/docs/usage/using-other-styles.md
+ */
+import {
+  faStar,
+  faSquare,
+  faSpinner,
+  faEnvelope,
+  faCheck,
+  faExclamation,
+  faExclamationCircle,
+  faTimes,
+} from '@fortawesome/free-solid-svg-icons';
+
+// Add icons to the library for convenient access in other components
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-pagos',
@@ -17,6 +39,13 @@ export class PagosComponent implements OnInit {
   monedaLiquidacion: Moneda = new Moneda('USD');
   monedaPago: Moneda = new Moneda('EUR');
   monedaContable: Moneda = new Moneda('ARS');
+  pIVA: number;
+
+  listaIVA: { valor: number; descripcion: string }[] = [
+    { valor: 0, descripcion: 'Exento de IVA' },
+    { valor: 21, descripcion: 'General 21%' },
+    { valor: 10.5, descripcion: 'Reducido 10,5%' },
+  ];
 
   private _iliquidacion: ImporteComponente = new ImporteComponente(
     null,
@@ -56,11 +85,26 @@ export class PagosComponent implements OnInit {
     this.monedaPago.codigoIso
   );
 
+  mensajes: { tipo: string; mensaje: string }[] = [];
+
   constructor(
     public listaMonedas: MonedasService,
     public listaMonedasJson: MonedasJsonService,
-    public listacambios: CambioService
-  ) {}
+    public listacambios: CambioService,
+    public library: FaIconLibrary
+  ) {
+    // Add multiple icons to the library
+    library.addIcons(
+      faStar,
+      faSquare,
+      faSpinner,
+      faEnvelope,
+      faCheck,
+      faExclamation,
+      faExclamationCircle,
+      faTimes
+    );
+  }
 
   ngOnInit(): void {
     //cargamos la lista de monedas
@@ -78,6 +122,7 @@ export class PagosComponent implements OnInit {
      */
     this._ideducible.importe = 20;
     this._icapital;
+    this.pIVA = 0;
   }
 
   public get iLiquidacion(): ImporteComponente {
@@ -142,17 +187,36 @@ export class PagosComponent implements OnInit {
   }
 
   f_ILiquidacionModificado(e: any): void {
-    console.log('modificarImporte: ', e);
+    //console.log('pagos.componente.ts.f_ILiquidacionModificado: ', e);
 
     this.iLiquidacion.importe = e; // estoy llamando al SETTER
-    this.iBruto.importe = this.iLiquidacion.importeCambio; /* la caja de Input es de tipo texto, espera un texto para
-    poder darle formato */
+    this._ibruto.importe = this.iLiquidacion.importeCambio;
+
+    this.f_calcularTotales();
+  }
+
+  f_ICapitalModificado(e: any): void {
+    //console.log('pagos.componente.ts.f_ILiquidacionModificado: ', e);
+
+    this.iCapital.importe = e; // estoy llamando al SETTER
+    this._ibruto.importe = this.iCapital.importeCambio;
+
+    this.f_calcularTotales();
+  }
+
+  f_IFranquiciaModificado(e: any): void {
+    //console.log('pagos.componente.ts.f_ILiquidacionModificado: ', e);
+
+    this.iFranquicia.importe = e; // estoy llamando al SETTER
+    this._ibruto.importe = this.iFranquicia.importeCambio;
 
     this.f_calcularTotales();
   }
 
   f_calcularTotales(): void {
-    if (this._ibruto.importe != null) {
+    this.mensajes = [];
+
+    if (this._ibruto.importe != null && this._ibruto.importe != undefined) {
       // Calculo importe base
       // BASE = MIN((MAX(BRUTO - NVL(DEDUCIBLE, 0), 0), NVL(CAPITAL, ∞))
 
@@ -166,11 +230,16 @@ export class PagosComponent implements OnInit {
         )
       );
 
+      if (this._ibruto.importe < this._ideducible.importe) {
+        this.mensajes.push({ tipo: 'aviso', mensaje: 'Pago 0 por deducible' });
+      }
+
       // Calculo impuestos
       // IMPUESTOS = BASE * PORCENTAJE
-      this._iiva.importe = +((this._ibase.importe * 21) / 100).toPrecision(
-        this.iBase.moneda.numeroDecimales
-      );
+      this._iiva.importe = +(
+        (this._ibase.importe * this.pIVA) /
+        100
+      ).toPrecision(this.iBase.moneda.numeroDecimales);
 
       // Calculo importe neto
       // NETO = BASE + SUM(IMPUESTOS) + SUM(-RETENCIONES)
@@ -183,9 +252,22 @@ export class PagosComponent implements OnInit {
         (this._ifranquicia.importe ? this._ifranquicia.importe : 0)
       ) {
         this.iTotal.importe = this._ineto.importe;
+
+        if (this._ifranquicia.importe) {
+          this.mensajes.push({
+            tipo: 'aviso',
+            mensaje: 'Pago liberado supera franqucia',
+          });
+        }
       } else {
         this.iTotal.importe = 0;
+        this.mensajes.push({
+          tipo: 'aviso',
+          mensaje: 'Pago retenido por franquicia',
+        });
       }
+
+      this.mensajes.push({ tipo: 'informativo', mensaje: 'Calculo completo' });
     }
 
     // TODO: Marcar visualmente los topes que no se superan, DEDUCIBLE, CAPITAL, FRANQUICIA
@@ -194,10 +276,10 @@ export class PagosComponent implements OnInit {
 
     // TODO: Mostrar mensajes de franquicia y deducible aplicados
 
-    // TODO: bloquear campos no editables de la sección de pagos
+    // TODO: Crear paquete de instalación
 
-    // TODO: Al editar deducible / franquicia recalcular totales
+    // TODO: Numeros a letras
 
-    // TODO: IVA, selector de % de IVA
+    // TODO: Franquicia y Capita Maximo
   }
 }

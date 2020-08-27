@@ -46,6 +46,8 @@ export class InputMonedaComponent implements OnInit {
   //TODO: passar un objecte complexe
   //   @Input()
   //   input_obj_importe: any;
+  @Input()
+  input_disabled: boolean = false;
 
   @Output()
   EventoImporteModificado = new EventEmitter<number>();
@@ -115,10 +117,10 @@ export class InputMonedaComponent implements OnInit {
         scale: this._importe.moneda.numeroDecimales,
         normalizeZeros: false,
         padFractionalZeros: true,
-        signed: true,
+        signed: false,
 
-        // min: 0,
-        // max: 10000000000,
+        min: 0,
+        max: 1000000000000,
       },
     },
   };
@@ -173,7 +175,6 @@ export class InputMonedaComponent implements OnInit {
     // console.log('masked.unmaskedValue: ' + mascara.unmaskedValue);
 
     // Emitimos el evento de importe cambiado cuando salimos de la caja
-    console.log('onBlur ', this._importe.importe);
     this.EventoImporteCambiado.emit(this._importe.importe);
   }
 
@@ -262,9 +263,11 @@ export class InputMonedaComponent implements OnInit {
 
   public set cmoneda(val: string) {
     this._importe.moneda = new Moneda(val);
-    this._importe.importeMask = this._importe.importe
-      ? this._importe.importe.toString()
-      : null;
+    if (this._importe.importeMask != null) {
+      // si el campo INPUT ha sido modificado por el usuario
+      this._importe.importeMask =
+        this._importe.importe != NaN ? this._importe.importe.toString() : null;
+    }
   }
 
   public get cmoneda(): string {
@@ -273,9 +276,11 @@ export class InputMonedaComponent implements OnInit {
 
   public set cmonedaCambio(val: string) {
     this._importe.monedaCambio = new Moneda(val);
-    this._importe.importeMask = this._importe.importe
-      ? this._importe.importe.toString()
-      : null;
+
+    if (this._importe.importeMask != null) {
+      this._importe.importeMask =
+        this._importe.importe != NaN ? this._importe.importe.toString() : null;
+    }
   }
 
   public get cmonedaCambio(): string {

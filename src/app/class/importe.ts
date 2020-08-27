@@ -158,46 +158,4 @@ export class Importe {
       return +p_importe.toFixed(this._monedaCambio.numeroDecimales);
     }
   }
-
-  /* public f_printTasaCambio(dec: number): string {
-    return this.tasaCambio.toFixed(
-      dec
-        ? this.tasaCambio < 0.1
-          ? 6
-          : this._monedaCambio.numeroDecimales
-        : dec
-    );
-  }
-
-  public f_printImporte(): string {
-    let mascara = IMask.createMask({
-      mask: Number,
-      thousandsSeparator: '.',
-      scale: this._moneda.numeroDecimales,
-    });
-    mascara.resolve(this._importe.toString());
-    return mascara.value;
-  }
-
-  public f_printImporteCambio(): string {
-    let mascara = IMask.createMask({
-      mask: Number,
-      thousandsSeparator: '.',
-      scale: this._monedaCambio.numeroDecimales,
-    });
-    mascara.resolve(this._importeCambio.toString());
-    return mascara.value;
-  } */
-
-  /* public set importeMask(val: string) {
-    this._importeMask = val;
-    this._importe = +this._importeMask;
-    this._importeCambio = this.f_calcularCambio(this._importe);
-
-    console.log(this._importeMask + ' ' + this._importe);
-  }
-
-  public get importeMask() {
-    return this._importeMask;
-  } */
 }
