@@ -21,6 +21,7 @@ import {
   faSquare,
   faSpinner,
   faEnvelope,
+  faCircle,
   faCheck,
   faExclamation,
   faExclamationCircle,
@@ -102,7 +103,8 @@ export class PagosComponent implements OnInit {
       faCheck,
       faExclamation,
       faExclamationCircle,
-      faTimes
+      faTimes,
+      faCircle
     );
   }
 

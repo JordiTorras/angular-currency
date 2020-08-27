@@ -57,26 +57,32 @@ export class MonedasService {
   constructor(private http: HttpClient) {}
 
   public f_obtenerListaMonedas() {
-    return this.http
-      .get<MonedasResponse>('../assets/data/configuracionMonedas.json')
-      .pipe(
-        // map permite modificar la información que fluye atrabes del observable
-        // modificamos para cada elemento del array de respuesta (resp.moneda) con el .map
-        // para que devuelva una instancia de la clase Moneda llamando la funcion
-        // estatica Moneda.f_monedaDesdeJson
+    return (
+      this.http
+        // para que me funcionara en el servidor XAMPP - Apache he tenido que cambiar la
+        // ruta '../assets/...' por la ruta relativa 'src/assets/...' de esta forma no tengo
+        // que copiar el archivo /assets/data/configuracionMonedas.json en
+        // C:\xampp\htdocs\assets sino que lo puedo manter dentro de C:\xampp\htdocs\angular-currency
+        .get<MonedasResponse>('src/assets/data/configuracionMonedas.json')
+        .pipe(
+          // map permite modificar la información que fluye atrabes del observable
+          // modificamos para cada elemento del array de respuesta (resp.moneda) con el .map
+          // para que devuelva una instancia de la clase Moneda llamando la funcion
+          // estatica Moneda.f_monedaDesdeJson
 
-        map((resp) => {
-          return resp.monedas.map((datoJson) =>
-            Moneda.f_MonedaDesdeJson(datoJson)
-          );
+          map((resp) => {
+            return resp.monedas.map((datoJson) =>
+              Moneda.f_MonedaDesdeJson(datoJson)
+            );
+          })
+        )
+        .toPromise()
+        .then((resp) => {
+          this.monedas = resp;
+          this.cargada = true;
+          gl_monedas = this;
         })
-      )
-      .toPromise()
-      .then((resp) => {
-        this.monedas = resp;
-        this.cargada = true;
-        gl_monedas = this;
-      });
+    );
   }
 
   public f_getDatosMoneda(p_moneda: string): Moneda {
