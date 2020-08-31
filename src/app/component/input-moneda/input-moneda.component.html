@@ -1,54 +1,53 @@
 <div class="input-group input-group-sm">
-  <div
-    class="input-group-prepend"
-    *ngIf="!input_selectorMoneda; else selectorMoneda"
-  >
-    <span class="input-group-text">{{ _importe.moneda.codigoIso }}</span>
-  </div>
-  <input
-    type="text"
-    class="form-control"
-    style="text-align: right"
-    placeholder="Introduzca un importe"
-    [(ngModel)]="_importe.importeMask"
-    (ngModelChange)="onChange($event)"
-    [disabled]="input_disabled"
-    [imask]="mask"
-    [unmask]="true"
-    (blur)="onBlur()"
-    onfocus="this.select();"
-  />
+    <div class="input-group-prepend" *ngIf="!input_selectorMoneda; else selectorMoneda">
+        <span class="input-group-text">{{ _importe.moneda.codigoIso }}</span>
+    </div>
+    <input
+        type="text"
+        class="form-control"
+        style="text-align: right"
+        placeholder="Introduzca un importe"
+        [(ngModel)]="_importe.importeMask"
+        [disabled]="input_disabled"
+        [imask]="mask"
+        [unmask]="true"
+        (change)="onChange($event)"
+        (blur)="onBlur()"
+        onfocus="this.select();"
+    />
 </div>
 
 <!-- (ngModelChange)="onChange($event)" -->
 
 <span
-  class="float-left input-moneda-contravalor"
-  *ngIf="_importe.moneda.codigoIso != _importe.monedaCambio.codigoIso"
+    class="float-left input-moneda-contravalor"
+    *ngIf="_importe.moneda.codigoIso != _importe.monedaCambio.codigoIso"
 >
-  (1 {{ _importe.moneda.codigoIso }} = {{ _importe.f_printTasaCambio(2) }}
-  {{ _importe.monedaCambio.codigoIso }})
+    (1 {{ _importe.moneda.codigoIso }} = {{ _importe.f_printTasaCambio(2) }}
+    {{ _importe.monedaCambio.codigoIso }})
 </span>
 <span class="float-right input-moneda-contravalor">
-  {{ _importe.f_printImporteCambio() }} {{ _importe.monedaCambio.codigoIso }}
+    {{ _importe.f_printImporteCambio() }} {{ _importe.monedaCambio.codigoIso }}
 </span>
 
 <ng-template #selectorMoneda>
-  <div>
-    <!-- Hemos creado el mgModel directamente a una funcion SET importeComponentes.cmoneda
+    <div>
+        <!-- Hemos creado el ngModel directamente a una funcion SET importeComponentes.cmoneda
          como consecuencia, cada vez que se modifica el valor se llama a la función set que es la que
          se encarga de gestionar los cambios, ya no es necesario el evento OnChange.
-    -->
-    <select
-      [(ngModel)]="cmoneda"
-      (change)="f_monedaModificada(_importe.moneda.codigoIso)"
-    >
-      <option
-        *ngFor="let item of listaMonedasJson.monedas"
-        [value]="item.codigoIso"
-      >
-        {{ item.codigoIso }}
-      </option>
-    </select>
-  </div>
+        -->
+        <select [(ngModel)]="cmoneda" (change)="onChangeMoneda(_importe.moneda.codigoIso)">
+            <option *ngFor="let item of listaMonedasJson.monedas" [value]="item.codigoIso">
+                {{ item.codigoIso }}
+            </option>
+        </select>
+        <!-- <select
+            [(ngModel)]="_importe.moneda.codigoIso"
+            (change)="onChangeMoneda(_importe.moneda.codigoIso)"
+        >
+            <option *ngFor="let item of listaMonedasJson.monedas" [value]="item.codigoIso">
+                {{ item.codigoIso }}
+            </option>
+        </select> -->
+    </div>
 </ng-template>

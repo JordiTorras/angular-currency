@@ -1,18 +1,22 @@
 .themed-grid-col {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  background-color: rgba(86, 61, 124, 0.05);
-  border: 1px solid rgba(86, 61, 124, 0.1);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(86, 61, 124, 0.05);
+    border: 1px solid rgba(86, 61, 124, 0.1);
 }
 
 .informativo {
-  color: #0077ff;
+    color: #0077ff;
+}
+
+.help {
+    font-size: 12px;
 }
 
 .aviso {
-  color: rgb(255, 136, 0);
+    color: rgb(255, 136, 0);
 }
 
 .error {
-  color: red;
+    color: red;
 }

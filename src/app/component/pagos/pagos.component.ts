@@ -27,7 +27,7 @@ import {
 
 // Add icons to the library for convenient access in other components
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-pagos',
@@ -82,6 +82,16 @@ export class PagosComponent implements OnInit {
             monedaPago: ['EUR'],
             monedaContable: ['ARS'],
             pIVA: ['0'],
+            //importeLiquidacion: ['', Validators.required],
+            // importeLiquidacion: [{ value: '34', disabled: true }],
+
+            // importeLiquidacion: this.formBuilder.group({
+            //     importe: ['10'],
+            //     moneda: ['EUR'],
+            //     monedaCambio: ['USD'],
+            // }),
+
+            importeLiquidacion: [this._iliquidacion, Validators.required],
         });
     }
 
@@ -96,6 +106,10 @@ export class PagosComponent implements OnInit {
     */
         //console.log(this.listaMonedas);
 
+        /**
+         * no podemos inicializar los importes hasta que no se ha inicilizado el componente para
+         * poder usar el valor de las monedas
+         */
         this._iliquidacion = new ImporteComponente(
             null,
             this.monedaLiquidacion.value,
@@ -109,6 +123,11 @@ export class PagosComponent implements OnInit {
         this._ineto = new ImporteComponente(null, this.monedaPago.value);
         this._ifranquicia = new ImporteComponente(null, this.monedaPago.value);
         this._itotal = new ImporteComponente(null, this.monedaPago.value);
+
+        /**
+         * inicializamos los importes
+         */
+        this.form.get('importeLiquidacion').setValue(this._iliquidacion);
 
         /**
          * Datos de la póliza
@@ -131,6 +150,11 @@ export class PagosComponent implements OnInit {
 
     get IVA() {
         return this.form.get('pIVA');
+    }
+
+    get importeliquidacionField() {
+        //console.warn(this.form.get('importeLiquidacion'));
+        return this.form.get('importeLiquidacion');
     }
 
     public get iLiquidacion(): ImporteComponente {
@@ -207,7 +231,6 @@ export class PagosComponent implements OnInit {
         //console.log('pagos.componente.ts.f_ILiquidacionModificado: ', e);
 
         this.iCapital.importe = e; // estoy llamando al SETTER
-        this._ibruto.importe = this.iCapital.importeCambio;
 
         this.f_calcularTotales();
     }
@@ -216,7 +239,6 @@ export class PagosComponent implements OnInit {
         //console.log('pagos.componente.ts.f_ILiquidacionModificado: ', e);
 
         this.iFranquicia.importe = e; // estoy llamando al SETTER
-        this._ibruto.importe = this.iFranquicia.importeCambio;
 
         this.f_calcularTotales();
     }
@@ -290,10 +312,14 @@ export class PagosComponent implements OnInit {
     }
 
     f_submit(event: Event): boolean {
-        // imprimir datos del formulario
-        console.warn(this.form.controls);
-        // implementar servicio de validaciones
-        // implementar servicio de guardado
+        event.preventDefault();
+        // TODO: imprimir datos del formulario
+        //console.log(this.form.controls);
+        console.warn(this.form.value);
+        // TODO: implementar servicio de validaciones
+        // TODO: implementar servicio de guardado
+        event.preventDefault();
+
         return true;
     }
 }
