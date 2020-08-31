@@ -10,9 +10,10 @@ import { InputMonedaComponent } from './component/input-moneda/input-moneda.comp
 import { PagosComponent } from './component/pagos/pagos.component';
 import { CambioService, MonedasService, MonedasJsonService } from './services';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export function f_cargarTasasDeCambio(servicio: CambioService) {
-  return () => servicio.f_obtenerTasaDeCambio();
+    return () => servicio.f_obtenerTasaDeCambio();
 }
 
 // export function f_cargarListaMonedas(servicio: MonedasService) {
@@ -20,42 +21,43 @@ export function f_cargarTasasDeCambio(servicio: CambioService) {
 // }
 
 export function f_cargarListaMonedasJson(servicio: MonedasJsonService) {
-  return () => servicio.f_obtenerListaMonedasJson();
+    return () => servicio.f_obtenerListaMonedasJson();
 }
 
 // export let AppInjector: Injector;
 
 @NgModule({
-  declarations: [AppComponent, InputMonedaComponent, PagosComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    IMaskModule,
-    FontAwesomeModule,
-  ],
-  providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: f_cargarTasasDeCambio,
-      deps: [CambioService],
-      multi: true,
-    },
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: f_cargarListaMonedas,
-    //   deps: [MonedasService],
-    //   multi: true,
-    // },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: f_cargarListaMonedasJson,
-      deps: [MonedasJsonService],
-      multi: true,
-    },
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent, InputMonedaComponent, PagosComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        HttpClientModule,
+        IMaskModule,
+        FontAwesomeModule,
+        ReactiveFormsModule,
+    ],
+    providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: f_cargarTasasDeCambio,
+            deps: [CambioService],
+            multi: true,
+        },
+        // {
+        //   provide: APP_INITIALIZER,
+        //   useFactory: f_cargarListaMonedas,
+        //   deps: [MonedasService],
+        //   multi: true,
+        // },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: f_cargarListaMonedasJson,
+            deps: [MonedasJsonService],
+            multi: true,
+        },
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}
 /* export class AppModule {

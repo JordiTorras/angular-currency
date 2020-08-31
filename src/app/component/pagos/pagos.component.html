@@ -1,282 +1,133 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 themed-grid-col">
-      Lista de monedas (objeto): Cargado = {{ listaMonedas.cargada }}<br />
-      Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}<br />
-      Lista de monedas (json): Cargado = {{ listaMonedasJson.cargada }}<br />
-      <div>
-        Carga de iconos:
-        <fa-icon [icon]="['fas', 'star']" size="lg"></fa-icon>
-        <fa-layers [fixedWidth]="true" size="lg">
-          <fa-icon [icon]="['fas', 'square']"></fa-icon>
-          <fa-icon
-            [inverse]="true"
-            [icon]="['fas', 'spinner']"
-            transform="shrink-6"
-          ></fa-icon>
-        </fa-layers>
-        <fa-layers [fixedWidth]="true" size="lg">
-          <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
-          <fa-layers-counter content="3"></fa-layers-counter>
-        </fa-layers>
-      </div>
-    </div>
-  </div>
+<form [formGroup]="form" novalidate (ngSubmit)="f_submit($event)">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 themed-grid-col">
+                Lista de monedas (objeto): Cargado = {{ listaMonedas.cargada }}<br />
+                Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}<br />
+                Lista de monedas (json): Cargado = {{ listaMonedasJson.cargada }}<br />
+                <div>
+                    Carga de iconos:
+                    <fa-icon [icon]="['fas', 'star']" size="lg"></fa-icon>
+                    <fa-layers [fixedWidth]="true" size="lg">
+                        <fa-icon [icon]="['fas', 'square']"></fa-icon>
+                        <fa-icon
+                            [inverse]="true"
+                            [icon]="['fas', 'spinner']"
+                            transform="shrink-6"
+                        ></fa-icon>
+                    </fa-layers>
+                    <fa-layers [fixedWidth]="true" size="lg">
+                        <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
+                        <fa-layers-counter content="3"></fa-layers-counter>
+                    </fa-layers>
+                </div>
+            </div>
+        </div>
 
-  <div class="row">
-    <div class="col-md-12 themed-grid-col">
-      <!-- Moneda de liquidacion -->
-      <label for="sel-monliq" class="mr-2">Moneda de liquidación:</label>
-      <select
-        id="sel-monliq"
-        [(ngModel)]="monedaLiquidacion.codigoIso"
-        class="mr-4"
-      >
-        <option
-          *ngFor="let item of listaMonedasJson.monedas"
-          [value]="item.codigoIso"
-        >
-          {{ item.codigoIso }} {{ item.nombre }}
-        </option>
-      </select>
-      <br />
-      <!-- Moneda de pago -->
-      <label for="sel-monpag" class="mr-2">Moneda de pago y reserva: </label>
-      <select
-        id="sel-monpag"
-        [(ngModel)]="monedaPago.codigoIso"
-        (change)="f_calcularTotales()"
-        class="mr-4"
-      >
-        <option
-          *ngFor="let item of listaMonedasJson.monedas"
-          [value]="item.codigoIso"
-        >
-          {{ item.codigoIso }} {{ item.nombre }}
-        </option>
-      </select>
-      <br />
-      <!-- Moneda contable -->
-      <label for="sel-monliq" class="mr-2">Moneda contable: </label>
-      <select
-        id="sel-monliq"
-        [(ngModel)]="monedaContable.codigoIso"
-        (change)="f_calcularTotales()"
-        class="mr-4"
-      >
-        <option
-          *ngFor="let item of listaMonedasJson.monedas"
-          [value]="item.codigoIso"
-        >
-          {{ item.codigoIso }} {{ item.nombre }}
-        </option>
-      </select>
-      <br />
-      <!-- Resultado de la liquidación -->
-      <span> Importe resultante de la liquidación: </span>
-      <div>
-        <app-input-moneda
-          [input_moneda]="monedaLiquidacion.codigoIso"
-          [input_monedaCambio]="monedaPago.codigoIso"
-          [input_selectorMoneda]="true"
-          (EventoImporteModificado)="f_ILiquidacionModificado($event)"
-        ></app-input-moneda>
-        <!-- (EventoImporteCambiado)="f_ILiquidacionModificado($event)" 
+        <div class="row">
+            <div class="col-md-12 themed-grid-col">
+                <!-- Moneda de liquidacion -->
+                <label for="sel-monliq" class="mr-2">Moneda de liquidación:</label>
+                <select id="sel-monliq" formControlName="monedaLiquidacion" class="mr-4">
+                    <option *ngFor="let item of listaMonedasJson.monedas" [value]="item.codigoIso">
+                        {{ item.codigoIso }} {{ item.nombre }}
+                    </option>
+                </select>
+                <br />
+                <!-- Moneda de pago -->
+                <label for="sel-monpag" class="mr-2">Moneda de pago y reserva: </label>
+                <select
+                    id="sel-monpag"
+                    formControlName="monedaPago"
+                    (change)="f_calcularTotales()"
+                    class="mr-4"
+                >
+                    <option *ngFor="let item of listaMonedasJson.monedas" [value]="item.codigoIso">
+                        {{ item.codigoIso }} {{ item.nombre }}
+                    </option>
+                </select>
+                <br />
+                <!-- Moneda contable -->
+                <label for="sel-monliq" class="mr-2">Moneda contable: </label>
+                <select
+                    id="sel-monliq"
+                    formControlName="monedaContable"
+                    (change)="f_calcularTotales()"
+                    class="mr-4"
+                >
+                    <option *ngFor="let item of listaMonedasJson.monedas" [value]="item.codigoIso">
+                        {{ item.codigoIso }} {{ item.nombre }}
+                    </option>
+                </select>
+                <br />
+                <!-- Resultado de la liquidación -->
+                <span> Importe resultante de la liquidación: </span>
+                <div>
+                    <app-input-moneda
+                        [input_moneda]="monedaLiquidacion.value"
+                        [input_monedaCambio]="monedaPago.value"
+                        [input_selectorMoneda]="true"
+                        (EventoImporteModificado)="f_ILiquidacionModificado($event)"
+                    ></app-input-moneda>
+                    <!-- (EventoImporteCambiado)="f_ILiquidacionModificado($event)" 
 (EventoImporteModificado)="f_ILiquidacionModificado($event)"-->
-      </div>
-    </div>
-  </div>
-
-  <!--Tratando los campos de la seccion de totales como datos independientes -->
-  <div class="row">
-    <div class="div col-md-6 themed-grid-col">
-      <!-- Importe bruto -->
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">Importe bruto:</div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_importe]="iBruto.importeMask"
-            [input_moneda]="monedaPago.codigoIso"
-            [input_monedaCambio]="monedaContable.codigoIso"
-            [input_disabled]="true"
-          ></app-input-moneda>
-        </div>
-      </div>
-
-      <!-- Deducible -->
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">Deducible Pendiente:</div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_importe]="iDeducible.importeMask"
-            [input_moneda]="monedaPago.codigoIso"
-            [input_monedaCambio]="monedaContable.codigoIso"
-          ></app-input-moneda>
-        </div>
-      </div>
-
-      <!-- Importe Capital Maximo -->
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">Capital pendiente:</div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_importe]="iCapital.importeMask"
-            [input_moneda]="monedaPago.codigoIso"
-            [input_monedaCambio]="monedaContable.codigoIso"
-            (EventoImporteModificado)="f_ICapitalModificado($event)"
-          ></app-input-moneda>
-        </div>
-      </div>
-
-      <!-- Importe base -->
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">
-          Importe Base<base href="" />:
-        </div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_importe]="iBase.importeMask"
-            [input_moneda]="monedaPago.codigoIso"
-            [input_monedaCambio]="monedaContable.codigoIso"
-            [input_disabled]="true"
-          ></app-input-moneda>
-        </div>
-      </div>
-
-      <!-- Importe Iva -->
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">
-          IVA:
-          <select
-            [(ngModel)]="pIVA"
-            (change)="f_calcularTotales()"
-            style="width: 100%"
-          >
-            <option *ngFor="let item of listaIVA" [value]="item.valor">
-              {{ item.descripcion }}
-            </option>
-          </select>
-        </div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_importe]="iIva.importeMask"
-            [input_moneda]="monedaPago.codigoIso"
-            [input_monedaCambio]="monedaContable.codigoIso"
-            [input_disabled]="true"
-          ></app-input-moneda>
-        </div>
-      </div>
-
-      <!-- Importe Neto -->
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">Importe Neto:</div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_importe]="iNeto.importeMask"
-            [input_moneda]="monedaPago.codigoIso"
-            [input_monedaCambio]="monedaContable.codigoIso"
-            [input_disabled]="true"
-          ></app-input-moneda>
-        </div>
-      </div>
-
-      <!-- Importe Franquicia -->
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">Franquicia pendiente:</div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_importe]="iFranquicia.importeMask"
-            [input_moneda]="monedaPago.codigoIso"
-            [input_monedaCambio]="monedaContable.codigoIso"
-            (EventoImporteModificado)="f_IFranquiciaModificado($event)"
-          ></app-input-moneda>
-        </div>
-      </div>
-
-      <!-- Importe final a pagar -->
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">Total a pagar:</div>
-        <div class="div col-md-8 themed-grid-col">
-          <app-input-moneda
-            [input_importe]="iTotal.importeMask"
-            [input_moneda]="monedaPago.codigoIso"
-            [input_monedaCambio]="monedaContable.codigoIso"
-            [input_disabled]="true"
-          ></app-input-moneda>
-        </div>
-      </div>
-    </div>
-    <!-- Panel derecho -->
-    <div class="div col-md-6 themed-grid-col">
-      .div col-md-6
-      <br />
-      <span [hidden]="mensajes">Mensajes con For</span>
-      <span *ngFor="let item of mensajes" class="{{ item.tipo }}"
-        >{{ item.mensaje }}<br />
-      </span>
-      <br />
-      <span [hidden]="mensajes">Mensajes con For-Switch</span>
-      <div *ngFor="let mensaje of mensajes">
-        <div [ngSwitch]="mensaje.tipo">
-          <div *ngSwitchCase="'informativo'" class="informativo">
-            <fa-icon [icon]="['fas', 'check']"></fa-icon>
-            {{ mensaje.mensaje }}
-          </div>
-          <div *ngSwitchCase="'aviso'" class="aviso">
-            <fa-icon [icon]="['fas', 'exclamation-circle']"></fa-icon>
-            {{ mensaje.mensaje }}
-          </div>
-          <div *ngSwitchCase="'error'" class="error">
-            <fa-icon [icon]="['fas', 'times']"></fa-icon>
-
-            {{ mensaje.mensaje }}
-          </div>
-          <div *ngSwitchDefault>{{ mensaje.mensaje }}</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!--Tratando los campos de totales como si fueran una lista (generacion dinamica) -->
-  <!-- <div class="row">
-    <div class="div col-md-6 themed-grid-col">
-      <ul class="list-unstyled">
-        <li>
-          <div class="row">
-            <div class="div col-md-4 themed-grid-col">
-              Importe bruto
+                </div>
             </div>
-            <div class="div col-md-8 themed-grid-col">
-              <app-input-moneda></app-input-moneda>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row">
-            <div class="div col-md-4 themed-grid-col">
-              Deducible
-            </div>
-            <div class="div col-md-8 themed-grid-col">
-              <app-input-moneda></app-input-moneda>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div class="div col-md-6 themed-grid-col">
-      .div col-md-6
-    </div>
-  </div> -->
+        </div>
 
-  <br />
-  <div class="row">
-    <div class="div col-md-6 themed-grid-col">
-      .div col-md-6
-      <div class="row">
-        <div class="div col-md-4 themed-grid-col">.div col-md-4</div>
-        <div class="div col-md-8 themed-grid-col">.div col-md-8</div>
-      </div>
+        <!--Tratando los campos de la seccion de totales como datos independientes -->
+        <div class="row">
+            <!-- Panel izquierdo -->
+            <div class="div col-md-6 themed-grid-col"></div>
+            <!-- Panel derecho -->
+            <div class="div col-md-6 themed-grid-col">
+                .div col-md-6
+                <br />
+                <span [hidden]="mensajes">Mensajes con For</span>
+                <span *ngFor="let item of mensajes" class="{{ item.tipo }}"
+                    >{{ item.mensaje }}<br />
+                </span>
+                <br />
+                <span [hidden]="mensajes">Mensajes con For-Switch</span>
+                <div *ngFor="let mensaje of mensajes">
+                    <div [ngSwitch]="mensaje.tipo">
+                        <div *ngSwitchCase="'informativo'" class="informativo">
+                            <fa-icon [icon]="['fas', 'check']"></fa-icon>
+                            {{ mensaje.mensaje }}
+                        </div>
+                        <div *ngSwitchCase="'aviso'" class="aviso">
+                            <fa-icon [icon]="['fas', 'exclamation-circle']"></fa-icon>
+                            {{ mensaje.mensaje }}
+                        </div>
+                        <div *ngSwitchCase="'error'" class="error">
+                            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+
+                            {{ mensaje.mensaje }}
+                        </div>
+                        <div *ngSwitchDefault>{{ mensaje.mensaje }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Botton submit -->
+        <div class="row">
+            <div class="div col-md-12 themed-grid-col">
+                <button type="submit" class="btn btn-primary">
+                    <fa-icon [icon]="['fas', 'plus-square']"></fa-icon> Crear pago
+                </button>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="div col-md-6 themed-grid-col">
+                .div col-md-6
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">.div col-md-4</div>
+                    <div class="div col-md-8 themed-grid-col">.div col-md-8</div>
+                </div>
+            </div>
+            <div class="div col-md-6 themed-grid-col">.div col-md-6</div>
+        </div>
     </div>
-    <div class="div col-md-6 themed-grid-col">.div col-md-6</div>
-  </div>
-</div>
+</form>
