@@ -8,14 +8,18 @@
         style="text-align: right"
         placeholder="Introduzca un importe"
         [(ngModel)]="_importe.importeMask"
-        [disabled]="input_disabled"
+        [disabled]="isDisabled"
         [imask]="mask"
         [unmask]="true"
-        (change)="onChange($event)"
+        (input)="onInput($event.target.value)"
         (blur)="onBlur()"
         onfocus="this.select();"
     />
 </div>
+
+<!-- [(ngModel)]="_importe.importeMask" -->
+
+<!-- (change)="onChange($event)" -->
 
 <!-- (ngModelChange)="onChange($event)" -->
 

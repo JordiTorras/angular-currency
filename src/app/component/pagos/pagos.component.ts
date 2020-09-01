@@ -82,16 +82,16 @@ export class PagosComponent implements OnInit {
             monedaPago: ['EUR'],
             monedaContable: ['ARS'],
             pIVA: ['0'],
-            //importeLiquidacion: ['', Validators.required],
+            importeLiquidacion: ['', Validators.required],
             // importeLiquidacion: [{ value: '34', disabled: true }],
 
             // importeLiquidacion: this.formBuilder.group({
             //     importe: ['10'],
-            //     moneda: ['EUR'],
-            //     monedaCambio: ['USD'],
+            //     moneda: ['USD'],
+            //     monedaCambio: ['EUR'],
             // }),
 
-            importeLiquidacion: [this._iliquidacion, Validators.required],
+            //importeLiquidacion: [this._iliquidacion, Validators.required],
         });
     }
 
@@ -127,7 +127,7 @@ export class PagosComponent implements OnInit {
         /**
          * inicializamos los importes
          */
-        this.form.get('importeLiquidacion').setValue(this._iliquidacion);
+        //this.form.get('importeLiquidacion').setValue(this._iliquidacion);
 
         /**
          * Datos de la póliza

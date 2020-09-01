@@ -12,9 +12,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MonedasJsonService } from 'src/app/services';
 import { ImporteComponente } from 'src/app/component/input-moneda/ImporteComponente';
 import { Moneda } from 'src/app/class/moneda';
-
-// Usamos directamente la libreria javascript, no se como importarla de angular-imask
-
 import { Importe } from 'src/app/class/importe';
 import IMask from 'imask';
 
@@ -47,13 +44,10 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
     // consultar https://www.it-swarm.dev/es/angular/como-detectar-cuando-un-valor-de-input-cambia-en-angular/827413320/
     // @Input()
     // input_importe: number;
-    // @Input()
-    // input_moneda: string;
-    // @Input()
-    // input_monedaCambio: string;
+    @Input() input_moneda: string;
+    @Input() input_monedaCambio: string;
 
-    @Input()
-    input_selectorMoneda: boolean = false;
+    @Input() input_selectorMoneda: boolean = false;
     //TODO: passar un objecte complexe
     //   @Input()
     //   input_obj_importe: any;
@@ -65,11 +59,6 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
 
     @Output()
     EventoImporteCambiado = new EventEmitter<number>();
-
-    onTouch = () => {
-        console.log('onTouch');
-    };
-    isDisabled: boolean;
 
     ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
         console.log('input-moneda.ngOnChanges');
@@ -113,7 +102,7 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
 
     public _importe: ImporteComponente = new ImporteComponente(
         null,
-        'ARS' /* moneda por defecto */
+        'ARS' /* FIXME: moneda por defecto */
     );
 
     // tenemos que usar una variable string para el ngModel, no podemos usar
@@ -138,25 +127,6 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
             },
         },
     });
-
-    /* public mask: any = {
-        // https://imask.js.org/guide.html#masked-number
-        mask: this._importe.moneda.simbolo + ' num',
-        blocks: {
-            num: {
-                // nested masks are available!
-                mask: Number,
-                thousandsSeparator: '.',
-                scale: this._importe.moneda.numeroDecimales,
-                normalizeZeros: false,
-                padFractionalZeros: true,
-                signed: false,
-
-                min: 0,
-                max: 1000000000000,
-            },
-        },
-    }; */
 
     constructor(public listaMonedasJson: MonedasJsonService) {}
 
@@ -203,12 +173,6 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
         });
     }
 
-    public onChange(e: any): void {
-        console.log('input-moneda.onChange');
-        //console.log('onChange ', this._importe.importe, ' e: ', e);
-        //this.EventoImporteModificado.emit(this._importe.importe);
-    }
-
     public onComplete() {}
 
     public set cmoneda(val: string) {
@@ -241,31 +205,70 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
      *
      * esta funcion se llama cada vez que se hace un set en el campo
      */
-    writeValue(p_importe: Importe): void {
-        if (p_importe) {
-            console.log('writeValue.valor: ', p_importe);
-            this._importe = new ImporteComponente(
-                p_importe.importe,
-                p_importe.moneda.codigoIso,
-                p_importe.monedaCambio.codigoIso
-            );
-        }
+    // writeValue(value: any): void {
+    //     console.log('input-moneda', 'writeValue', value);
+    //     if (value) {
+    //         //console.log('writeValue.valor: ', p_importe);
+    //         this._importe = new ImporteComponente(
+    //             value.importe,
+    //             value.moneda.codigoIso,
+    //             value.monedaCambio.codigoIso
+    //         );
+    //     }
+    // }
+
+    writeValue(value: any): void {
+        // console.log('writeValue');
+        // if (value) {
+        //     this.value = value || '';
+        // } else {
+        //     this.value = '';
+        // }
     }
 
     registerOnChange(fn: any): void {
         console.log('registerOnChange');
-
         this.onChange = fn;
+    }
+
+    // onChange se dispara cuando el valor cambia, es decir despues de salir del campo si el valor ha cambiado
+    public onChange(value: any): void {
+        console.log('input-moneda', 'onChange', value, this._importe.importeMask);
+
+        //this.EventoImporteModificado.emit(this._importe.importe);
     }
 
     registerOnTouched(fn: any): void {
         console.log('registerOnTouched');
-
         this.onTouch = fn;
     }
 
     setDisabledState(isDisabled: boolean): void {
         console.log('setDisableStat');
         this.isDisabled = isDisabled;
+    }
+
+    onTouch = () => {
+        console.log('onTouch');
+    };
+
+    isDisabled: boolean;
+
+    // onInput se dispara cada vez que pulsamos una tecla, pero el valor del campo  this._importe.importeMask
+    // contiene un valor menos, no esta actualizado a la ultima posición
+    // ejemplo hemos escrito 1234 --> input-moneda onInput value:  "$ 1234"  importeMask:  "123"
+    onInput(value: string) {
+        console.log(
+            'input-moneda',
+            'onInput',
+            'value: ',
+            value,
+            ' importeMask: ',
+            this._importe.importeMask
+        );
+        // value contiene el valor formateado a texto, con el separador de miles 82.399,34
+
+        this.onTouch();
+        this.onChange(value);
     }
 }
