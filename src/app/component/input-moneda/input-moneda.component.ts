@@ -19,15 +19,8 @@ import IMask from 'imask';
     selector: 'app-input-moneda',
     templateUrl: './input-moneda.component.html',
     styleUrls: ['./input-moneda.component.css'],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => InputMonedaComponent),
-            multi: true,
-        },
-    ],
 })
-export class InputMonedaComponent implements OnInit, ControlValueAccessor {
+export class InputMonedaComponent implements OnInit {
     /*
     Patron para validar el formato númerico
     ^(([0-9]+)((.[0-9]{3})*)?)(,[0-9]{1,2})?$
@@ -44,6 +37,7 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
     // consultar https://www.it-swarm.dev/es/angular/como-detectar-cuando-un-valor-de-input-cambia-en-angular/827413320/
     // @Input()
     // input_importe: number;
+    @Input() input_controlName: string;
     @Input() input_moneda: string;
     @Input() input_monedaCambio: string;
 
@@ -77,21 +71,6 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
                     break;
                 case 'input_moneda':
                     this.cmoneda = changedProp.currentValue; // usamos el setter
-
-                    // TODO: cambiar la mascara en función de la moneda
-                    /* this.mask = {
-            mask: this._importe.moneda.simbolo + ' num',
-            blocks: {
-              num: {
-                // nested masks are available!
-                mask: Number,
-                thousandsSeparator: '.',
-                scale: this._importe.moneda.numeroDecimales,
-                normalizeZeros: false,
-                padFractionalZeros: true,
-              },
-            },
-          }; */
                     break;
                 case 'input_monedaCambio':
                     this.cmonedaCambio = changedProp.currentValue;
@@ -201,36 +180,6 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
         return this._importe.monedaCambio.codigoIso;
     }
 
-    /**
-     *
-     * esta funcion se llama cada vez que se hace un set en el campo
-     */
-    // writeValue(value: any): void {
-    //     console.log('input-moneda', 'writeValue', value);
-    //     if (value) {
-    //         //console.log('writeValue.valor: ', p_importe);
-    //         this._importe = new ImporteComponente(
-    //             value.importe,
-    //             value.moneda.codigoIso,
-    //             value.monedaCambio.codigoIso
-    //         );
-    //     }
-    // }
-
-    writeValue(value: any): void {
-        // console.log('writeValue');
-        // if (value) {
-        //     this.value = value || '';
-        // } else {
-        //     this.value = '';
-        // }
-    }
-
-    registerOnChange(fn: any): void {
-        console.log('registerOnChange');
-        this.onChange = fn;
-    }
-
     // onChange se dispara cuando el valor cambia, es decir despues de salir del campo si el valor ha cambiado
     public onChange(value: any): void {
         console.log('input-moneda', 'onChange', value, this._importe.importeMask);
@@ -238,37 +187,5 @@ export class InputMonedaComponent implements OnInit, ControlValueAccessor {
         //this.EventoImporteModificado.emit(this._importe.importe);
     }
 
-    registerOnTouched(fn: any): void {
-        console.log('registerOnTouched');
-        this.onTouch = fn;
-    }
-
-    setDisabledState(isDisabled: boolean): void {
-        console.log('setDisableStat');
-        this.isDisabled = isDisabled;
-    }
-
-    onTouch = () => {
-        console.log('onTouch');
-    };
-
     isDisabled: boolean;
-
-    // onInput se dispara cada vez que pulsamos una tecla, pero el valor del campo  this._importe.importeMask
-    // contiene un valor menos, no esta actualizado a la ultima posición
-    // ejemplo hemos escrito 1234 --> input-moneda onInput value:  "$ 1234"  importeMask:  "123"
-    onInput(value: string) {
-        console.log(
-            'input-moneda',
-            'onInput',
-            'value: ',
-            value,
-            ' importeMask: ',
-            this._importe.importeMask
-        );
-        // value contiene el valor formateado a texto, con el separador de miles 82.399,34
-
-        this.onTouch();
-        this.onChange(value);
-    }
 }

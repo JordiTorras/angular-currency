@@ -82,16 +82,6 @@ export class PagosComponent implements OnInit {
             monedaPago: ['EUR'],
             monedaContable: ['ARS'],
             pIVA: ['0'],
-            importeLiquidacion: ['', Validators.required],
-            // importeLiquidacion: [{ value: '34', disabled: true }],
-
-            // importeLiquidacion: this.formBuilder.group({
-            //     importe: ['10'],
-            //     moneda: ['USD'],
-            //     monedaCambio: ['EUR'],
-            // }),
-
-            //importeLiquidacion: [this._iliquidacion, Validators.required],
         });
     }
 
@@ -150,11 +140,6 @@ export class PagosComponent implements OnInit {
 
     get IVA() {
         return this.form.get('pIVA');
-    }
-
-    get importeliquidacionField() {
-        //console.warn(this.form.get('importeLiquidacion'));
-        return this.form.get('importeLiquidacion');
     }
 
     public get iLiquidacion(): ImporteComponente {

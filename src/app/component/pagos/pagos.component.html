@@ -74,7 +74,7 @@
                         [input_selectorMoneda]="true"
                     ></app-input-moneda> -->
                     <app-input-moneda
-                        formControlName="importeLiquidacion"
+                        [input_controlName]="'importeLiquidacion'"
                         [input_moneda]="monedaLiquidacion.value"
                         [input_monedaCambio]="monedaPago.value"
                         [input_selectorMoneda]="true"
@@ -83,7 +83,6 @@
 (EventoImporteModificado)="f_ILiquidacionModificado($event)"-->
                 </div>
                 <p class="help error">Es un campo requerido</p>
-                {{ importeliquidacionField.value | json }}
             </div>
         </div>
 
