@@ -7,7 +7,7 @@ import {
     SimpleChange,
     forwardRef,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormGroupDirective, ControlContainer, FormControl, Validators } from '@angular/forms';
 
 import { MonedasJsonService } from 'src/app/services';
 import { ImporteComponente } from 'src/app/component/input-moneda/ImporteComponente';
@@ -19,6 +19,12 @@ import IMask from 'imask';
     selector: 'app-input-moneda',
     templateUrl: './input-moneda.component.html',
     styleUrls: ['./input-moneda.component.css'],
+    viewProviders: [
+        {
+            provide: ControlContainer,
+            useExisting: FormGroupDirective,
+        },
+    ],
 })
 export class InputMonedaComponent implements OnInit {
     /*
@@ -108,10 +114,17 @@ export class InputMonedaComponent implements OnInit {
         },
     });
 
-    constructor(public listaMonedasJson: MonedasJsonService) {}
+    constructor(public listaMonedasJson: MonedasJsonService, private parent: FormGroupDirective) {}
 
     ngOnInit(): void {
         console.log('input-moneda.ngOnInit');
+
+        const myForm = this.parent.form;
+        myForm.addControl(
+            this.input_controlName + '_importe',
+            new FormControl('', Validators.required)
+        );
+        myForm.addControl('moneda', new FormControl());
     }
 
     ngAfterViewInit(): void {

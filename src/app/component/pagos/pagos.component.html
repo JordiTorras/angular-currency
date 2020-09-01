@@ -113,9 +113,10 @@
         <!-- Botton submit -->
         <div class="row">
             <div class="div col-md-12 themed-grid-col">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" [disabled]="form.invalid" class="btn btn-primary">
                     <fa-icon [icon]="['fas', 'plus-square']"></fa-icon> Crear pago
                 </button>
+                {{ form.errors }}
             </div>
         </div>
 

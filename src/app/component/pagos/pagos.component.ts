@@ -285,8 +285,6 @@ export class PagosComponent implements OnInit {
 
         // TODO: Marcar visualmente los topes que no se superan, DEDUCIBLE, CAPITAL, FRANQUICIA
 
-        // TODO: La moneda de pago es EUR pero el simbolo que se muestra es $
-
         // TODO: Mostrar mensajes de franquicia y deducible aplicados
 
         // TODO: Crear paquete de instalación

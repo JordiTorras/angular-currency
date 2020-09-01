@@ -8,6 +8,7 @@
         style="text-align: right"
         placeholder="Introduzca un importe"
         [(ngModel)]="_importe.importeMask"
+        [ngModelOptions]="{ standalone: true }"
         [disabled]="isDisabled"
         [imask]="mask"
         [unmask]="true"
@@ -39,7 +40,11 @@
          como consecuencia, cada vez que se modifica el valor se llama a la función set que es la que
          se encarga de gestionar los cambios, ya no es necesario el evento OnChange.
         -->
-        <select [(ngModel)]="cmoneda" (change)="onChangeMoneda(_importe.moneda.codigoIso)">
+        <select
+            [(ngModel)]="cmoneda"
+            [ngModelOptions]="{ standalone: true }"
+            (change)="onChangeMoneda(_importe.moneda.codigoIso)"
+        >
             <option *ngFor="let item of listaMonedasJson.monedas" [value]="item.codigoIso">
                 {{ item.codigoIso }}
             </option>
