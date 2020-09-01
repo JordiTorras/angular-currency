@@ -38,6 +38,7 @@ export class InputMonedaComponent implements OnInit {
     // @Input()
     // input_importe: number;
     @Input() input_controlName: string;
+    @Input() input_importe: number;
     @Input() input_moneda: string;
     @Input() input_monedaCambio: string;
 
@@ -184,7 +185,7 @@ export class InputMonedaComponent implements OnInit {
     public onChange(value: any): void {
         console.log('input-moneda', 'onChange', value, this._importe.importeMask);
 
-        //this.EventoImporteModificado.emit(this._importe.importe);
+        this.EventoImporteModificado.emit(this._importe.importe);
     }
 
     isDisabled: boolean;

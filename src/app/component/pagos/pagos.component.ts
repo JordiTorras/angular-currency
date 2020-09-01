@@ -301,6 +301,7 @@ export class PagosComponent implements OnInit {
         // TODO: imprimir datos del formulario
         //console.log(this.form.controls);
         console.warn(this.form.value);
+        console.warn(this._iliquidacion);
         // TODO: implementar servicio de validaciones
         // TODO: implementar servicio de guardado
         event.preventDefault();

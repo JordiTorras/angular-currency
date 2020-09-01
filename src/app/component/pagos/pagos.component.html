@@ -63,24 +63,14 @@
                 <!-- Importe resultante de la liquidacion -->
                 <span> Importe resultante de la liquidación: </span>
                 <div>
-                    <!-- <app-input-moneda
-                        [input_moneda]="monedaLiquidacion.value"
-                        [input_monedaCambio]="monedaPago.value"
-                        [input_selectorMoneda]="true"
-                        (EventoImporteModificado)="f_ILiquidacionModificado($event)"
-                    ></app-input-moneda> -->
-                    <!--                     <app-input-moneda
-                        formControlName="importeLiquidacion"
-                        [input_selectorMoneda]="true"
-                    ></app-input-moneda> -->
                     <app-input-moneda
                         [input_controlName]="'importeLiquidacion'"
+                        [input_importe]="iLiquidacion.importeMask"
                         [input_moneda]="monedaLiquidacion.value"
                         [input_monedaCambio]="monedaPago.value"
                         [input_selectorMoneda]="true"
+                        (EventoImporteCambiado)="f_ILiquidacionModificado($event)"
                     ></app-input-moneda>
-                    <!-- (EventoImporteCambiado)="f_ILiquidacionModificado($event)" 
-(EventoImporteModificado)="f_ILiquidacionModificado($event)"-->
                 </div>
                 <p class="help error">Es un campo requerido</p>
             </div>
