@@ -43,6 +43,11 @@ export class PagosComponent implements OnInit {
         { valor: 10.5, descripcion: 'Reducido 10,5%' },
     ];
 
+    monedaLiquidacion: string = 'USD';
+    monedaPago: string = 'EUR';
+    monedaContable: string = 'ARS';
+    pIVA = 0;
+
     private _iliquidacion: ImporteComponente;
     private _ibruto: ImporteComponente;
     private _ideducible: ImporteComponente;
@@ -59,8 +64,7 @@ export class PagosComponent implements OnInit {
         public listaMonedas: MonedasService,
         public listaMonedasJson: MonedasJsonService,
         public listacambios: CambioService,
-        public library: FaIconLibrary,
-        private formBuilder: FormBuilder
+        public library: FaIconLibrary
     ) {
         // Add multiple icons to the library
         library.addIcons(
@@ -75,14 +79,6 @@ export class PagosComponent implements OnInit {
             faCircle,
             faPlusSquare
         );
-
-        // Definicion de los campos del formulario
-        this.form = this.formBuilder.group({
-            monedaLiquidacion: ['USD'],
-            monedaPago: ['EUR'],
-            monedaContable: ['ARS'],
-            pIVA: ['0'],
-        });
     }
 
     ngOnInit(): void {
@@ -100,19 +96,15 @@ export class PagosComponent implements OnInit {
          * no podemos inicializar los importes hasta que no se ha inicilizado el componente para
          * poder usar el valor de las monedas
          */
-        this._iliquidacion = new ImporteComponente(
-            null,
-            this.monedaLiquidacion.value,
-            this.monedaPago.value
-        );
-        this._ibruto = new ImporteComponente(null, this.monedaPago.value);
-        this._ideducible = new ImporteComponente(null, this.monedaPago.value);
-        this._icapital = new ImporteComponente(null, this.monedaPago.value);
-        this._ibase = new ImporteComponente(null, this.monedaPago.value);
-        this._iiva = new ImporteComponente(null, this.monedaPago.value);
-        this._ineto = new ImporteComponente(null, this.monedaPago.value);
-        this._ifranquicia = new ImporteComponente(null, this.monedaPago.value);
-        this._itotal = new ImporteComponente(null, this.monedaPago.value);
+        this._iliquidacion = new ImporteComponente(null, this.monedaLiquidacion, this.monedaPago);
+        this._ibruto = new ImporteComponente(null, this.monedaPago);
+        this._ideducible = new ImporteComponente(20, this.monedaPago);
+        this._icapital = new ImporteComponente(null, this.monedaPago);
+        this._ibase = new ImporteComponente(null, this.monedaPago);
+        this._iiva = new ImporteComponente(null, this.monedaPago);
+        this._ineto = new ImporteComponente(null, this.monedaPago);
+        this._ifranquicia = new ImporteComponente(null, this.monedaPago);
+        this._itotal = new ImporteComponente(null, this.monedaPago);
 
         /**
          * inicializamos los importes
@@ -122,24 +114,8 @@ export class PagosComponent implements OnInit {
         /**
          * Datos de la póliza
          */
-        this._ideducible.importe = 20;
-        this._icapital;
-    }
-
-    get monedaLiquidacion() {
-        return this.form.get('monedaLiquidacion');
-    }
-
-    get monedaPago() {
-        return this.form.get('monedaPago');
-    }
-
-    get monedaContable() {
-        return this.form.get('monedaContable');
-    }
-
-    get IVA() {
-        return this.form.get('pIVA');
+        // this._ideducible.importe = 20;
+        // this._icapital;
     }
 
     public get iLiquidacion(): ImporteComponente {
@@ -251,7 +227,7 @@ export class PagosComponent implements OnInit {
 
             // Calculo impuestos
             // IMPUESTOS = BASE * PORCENTAJE
-            this._iiva.importe = +((this._ibase.importe * +this.IVA.value) / 100).toPrecision(
+            this._iiva.importe = +((this._ibase.importe * this.pIVA) / 100).toPrecision(
                 this.iBase.moneda.numeroDecimales
             );
 
@@ -298,8 +274,11 @@ export class PagosComponent implements OnInit {
         event.preventDefault();
         // TODO: imprimir datos del formulario
         //console.log(this.form.controls);
+
+        let jsonObj = JSON.stringify(this.form.value);
+        console.log(jsonObj);
+
         console.warn(this.form.value);
-        console.warn(this._iliquidacion);
         // TODO: implementar servicio de validaciones
         // TODO: implementar servicio de guardado
         event.preventDefault();

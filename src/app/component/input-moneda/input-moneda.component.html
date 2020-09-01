@@ -8,10 +8,10 @@
         style="text-align: right"
         placeholder="Introduzca un importe"
         [(ngModel)]="_importe.importeMask"
-        [ngModelOptions]="{ standalone: true }"
         [disabled]="isDisabled"
         [imask]="mask"
         [unmask]="true"
+        (change)="onChange($event)"
         (blur)="onBlur()"
         onfocus="this.select();"
     />
@@ -42,8 +42,7 @@
         -->
         <select
             [(ngModel)]="cmoneda"
-            [ngModelOptions]="{ standalone: true }"
-            (change)="onChangeMoneda(_importe.moneda.codigoIso)"
+            (change)="f_ActualizarOpcionesMascara(_importe.moneda.codigoIso)"
         >
             <option *ngFor="let item of listaMonedasJson.monedas" [value]="item.codigoIso">
                 {{ item.codigoIso }}

@@ -1,4 +1,4 @@
-<form [formGroup]="form" novalidate (ngSubmit)="f_submit($event)">
+<div>
     <div class="container">
         <div class="row">
             <div class="col-md-12 themed-grid-col">
@@ -28,7 +28,7 @@
             <div class="col-md-12 themed-grid-col">
                 <!-- Moneda de liquidacion -->
                 <label for="sel-monliq" class="mr-2">Moneda de liquidación:</label>
-                <select id="sel-monliq" formControlName="monedaLiquidacion" class="mr-4">
+                <select id="sel-monliq" [(ngModel)]="monedaLiquidacion" class="mr-4">
                     <option *ngFor="let item of listaMonedasJson.monedas" [value]="item.codigoIso">
                         {{ item.codigoIso }} {{ item.nombre }}
                     </option>
@@ -38,7 +38,7 @@
                 <label for="sel-monpag" class="mr-2">Moneda de pago y reserva: </label>
                 <select
                     id="sel-monpag"
-                    formControlName="monedaPago"
+                    [(ngModel)]="monedaPago"
                     (change)="f_calcularTotales()"
                     class="mr-4"
                 >
@@ -51,7 +51,7 @@
                 <label for="sel-monliq" class="mr-2">Moneda contable: </label>
                 <select
                     id="sel-monliq"
-                    formControlName="monedaContable"
+                    [(ngModel)]="monedaContable"
                     (change)="f_calcularTotales()"
                     class="mr-4"
                 >
@@ -64,22 +64,135 @@
                 <span> Importe resultante de la liquidación: </span>
                 <div>
                     <app-input-moneda
-                        [input_controlName]="'importeLiquidacion'"
                         [input_importe]="iLiquidacion.importeMask"
-                        [input_moneda]="monedaLiquidacion.value"
-                        [input_monedaCambio]="monedaPago.value"
+                        [input_moneda]="monedaLiquidacion"
+                        [input_monedaCambio]="monedaPago"
                         [input_selectorMoneda]="true"
                         (EventoImporteCambiado)="f_ILiquidacionModificado($event)"
                     ></app-input-moneda>
                 </div>
-                <p class="help error">Es un campo requerido</p>
+                <!-- <p class="help error">Es un campo requerido</p> -->
             </div>
         </div>
 
         <!--Tratando los campos de la seccion de totales como datos independientes -->
         <div class="row">
             <!-- Panel izquierdo -->
-            <div class="div col-md-6 themed-grid-col"></div>
+            <div class="div col-md-6 themed-grid-col">
+                <!-- Importe bruto -->
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">Importe bruto:</div>
+                    <div class="div col-md-8 themed-grid-col">
+                        <app-input-moneda
+                            [input_importe]="iBruto.importeMask"
+                            [input_moneda]="monedaPago"
+                            [input_monedaCambio]="monedaContable"
+                            [input_disabled]="true"
+                        ></app-input-moneda>
+                    </div>
+                </div>
+
+                <!-- Deducible -->
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">Deducible Pendiente:</div>
+                    <div class="div col-md-8 themed-grid-col">
+                        <app-input-moneda
+                            [input_importe]="iDeducible.importeMask"
+                            [input_moneda]="monedaPago"
+                            [input_monedaCambio]="monedaContable"
+                        ></app-input-moneda>
+                    </div>
+                </div>
+
+                <!-- Importe Capital Maximo -->
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">Capital pendiente:</div>
+                    <div class="div col-md-8 themed-grid-col">
+                        <app-input-moneda
+                            [input_importe]="iCapital.importeMask"
+                            [input_moneda]="monedaPago"
+                            [input_monedaCambio]="monedaContable"
+                            (EventoImporteModificado)="f_ICapitalModificado($event)"
+                        ></app-input-moneda>
+                    </div>
+                </div>
+
+                <!-- Importe base -->
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">Importe Base<base href="" />:</div>
+                    <div class="div col-md-8 themed-grid-col">
+                        <app-input-moneda
+                            [input_importe]="iBase.importeMask"
+                            [input_moneda]="monedaPago"
+                            [input_monedaCambio]="monedaContable"
+                            [input_disabled]="true"
+                        ></app-input-moneda>
+                    </div>
+                </div>
+
+                <!-- Importe Iva -->
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">
+                        IVA:
+                        <select
+                            [(ngModel)]="pIVA"
+                            (change)="f_calcularTotales()"
+                            style="width: 100%"
+                        >
+                            <option *ngFor="let item of listaIVA" [value]="item.valor">
+                                {{ item.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="div col-md-8 themed-grid-col">
+                        <app-input-moneda
+                            [input_importe]="iIva.importeMask"
+                            [input_moneda]="monedaPago"
+                            [input_monedaCambio]="monedaContable"
+                            [input_disabled]="true"
+                        ></app-input-moneda>
+                    </div>
+                </div>
+
+                <!-- Importe Neto -->
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">Importe Neto:</div>
+                    <div class="div col-md-8 themed-grid-col">
+                        <app-input-moneda
+                            [input_importe]="iNeto.importeMask"
+                            [input_moneda]="monedaPago"
+                            [input_monedaCambio]="monedaContable"
+                            [input_disabled]="true"
+                        ></app-input-moneda>
+                    </div>
+                </div>
+
+                <!-- Importe Franquicia -->
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">Franquicia pendiente:</div>
+                    <div class="div col-md-8 themed-grid-col">
+                        <app-input-moneda
+                            [input_importe]="iFranquicia.importeMask"
+                            [input_moneda]="monedaPago"
+                            [input_monedaCambio]="monedaContable"
+                            (EventoImporteModificado)="f_IFranquiciaModificado($event)"
+                        ></app-input-moneda>
+                    </div>
+                </div>
+
+                <!-- Importe final a pagar -->
+                <div class="row">
+                    <div class="div col-md-4 themed-grid-col">Total a pagar:</div>
+                    <div class="div col-md-8 themed-grid-col">
+                        <app-input-moneda
+                            [input_importe]="iTotal.importeMask"
+                            [input_moneda]="monedaPago"
+                            [input_monedaCambio]="monedaContable"
+                            [input_disabled]="true"
+                        ></app-input-moneda>
+                    </div>
+                </div>
+            </div>
             <!-- Panel derecho -->
             <div class="div col-md-6 themed-grid-col">
                 .div col-md-6
@@ -113,10 +226,9 @@
         <!-- Botton submit -->
         <div class="row">
             <div class="div col-md-12 themed-grid-col">
-                <button type="submit" [disabled]="form.invalid" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary">
                     <fa-icon [icon]="['fas', 'plus-square']"></fa-icon> Crear pago
                 </button>
-                {{ form.errors }}
             </div>
         </div>
 
@@ -132,4 +244,4 @@
             <div class="div col-md-6 themed-grid-col">.div col-md-6</div>
         </div>
     </div>
-</form>
+</div>
