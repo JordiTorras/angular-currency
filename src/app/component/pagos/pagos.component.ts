@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CambioService, MonedasService, MonedasJsonService } from 'src/app/services';
-import { Moneda } from 'src/app/class';
 import { ImporteComponente } from '../input-moneda/ImporteComponente';
+import { PagosService } from 'src/app/services/pagos.service';
 
 // Iconos
 /**
@@ -43,6 +43,12 @@ export class PagosComponent implements OnInit {
         { valor: 10.5, descripcion: 'Reducido 10,5%' },
     ];
 
+    estiloDeducible: {};
+    estiloCapital: {};
+    estiloFranquicia: {};
+
+    //background-color: rgba(86, 61, 124, 0.05)
+
     monedaLiquidacion: string = 'USD';
     monedaPago: string = 'EUR';
     monedaContable: string = 'ARS';
@@ -64,7 +70,8 @@ export class PagosComponent implements OnInit {
         public listaMonedas: MonedasService,
         public listaMonedasJson: MonedasJsonService,
         public listacambios: CambioService,
-        public library: FaIconLibrary
+        public library: FaIconLibrary,
+        private pagosService: PagosService
     ) {
         // Add multiple icons to the library
         library.addIcons(
@@ -205,13 +212,11 @@ export class PagosComponent implements OnInit {
     }
 
     f_calcularTotales(): void {
-        this.mensajes = [];
-
         if (this._ibruto.importe != null && this._ibruto.importe != undefined) {
             // Calculo importe base
             // BASE = MIN((MAX(BRUTO - NVL(DEDUCIBLE, 0), 0), NVL(CAPITAL, ∞))
 
-            this._ibase.importe = Math.min(
+            /* this._ibase.importe = Math.min(
                 this._icapital.importe ? this._icapital.importe : Infinity,
                 Math.max(
                     this._ibruto.importe - this._ideducible.importe
@@ -219,11 +224,14 @@ export class PagosComponent implements OnInit {
                         : 0,
                     0
                 )
-            );
+            ); */
 
-            if (this._ibruto.importe < this._ideducible.importe) {
-                this.mensajes.push({ tipo: 'aviso', mensaje: 'Pago 0 por deducible' });
-            }
+            const t1: number =
+                this._ibruto.importe - (this._ideducible.importe ? this._ideducible.importe : 0);
+            const t2: number = Math.max(t1, 0);
+            const t3: number = this._icapital.importe ? this._icapital.importe : Infinity;
+
+            this._ibase.importe = Math.min(t3, t2);
 
             // Calculo impuestos
             // IMPUESTOS = BASE * PORCENTAJE
@@ -237,33 +245,53 @@ export class PagosComponent implements OnInit {
 
             // Calculo importe total
             // SI (NETO > FRANQUICIA) => TOTAL = NETO  : TOTAL = 0 (retenido por franquicia)
-            if (
-                this._ineto.importe >= (this._ifranquicia.importe ? this._ifranquicia.importe : 0)
-            ) {
-                this.iTotal.importe = this._ineto.importe;
 
-                if (this._ifranquicia.importe) {
+            const t4: number = this._ifranquicia.importe ? this._ifranquicia.importe : 0;
+
+            this.iTotal.importe = this._ineto.importe >= t4 ? this._ineto.importe : 0;
+
+            /*
+                Gestion de los mensajes por pantalla
+            */
+            this.mensajes = []; // inicializamos vector de mensajes
+            this.estiloDeducible = {};
+            this.estiloCapital = {};
+            this.estiloFranquicia = {};
+
+            if (this._ibruto.importe < this._ideducible.importe) {
+                this.estiloDeducible = {
+                    'background-color': 'rgba(255, 255, 0, 0.15)',
+                };
+                this.mensajes.push({ tipo: 'aviso', mensaje: 'Pago 0 por deducible' });
+            }
+
+            if (this._icapital.importe) {
+                if (t3 /* capital */ < t2 /* aplicado deducible */) {
+                    this.estiloCapital = {
+                        'background-color': 'rgba(255, 255, 0, 0.15)',
+                    };
+                }
+            }
+
+            if (this._ifranquicia.importe) {
+                if (this._ineto.importe >= t4) {
                     this.mensajes.push({
                         tipo: 'aviso',
                         mensaje: 'Pago liberado supera franqucia',
                     });
+                } else {
+                    this.estiloFranquicia = {
+                        'background-color': 'rgba(255, 255, 0, 0.15)',
+                    };
+                    this.mensajes.push({
+                        tipo: 'aviso',
+                        mensaje: 'Pago retenido por franquicia',
+                    });
                 }
-            } else {
-                this.iTotal.importe = 0;
-                this.mensajes.push({
-                    tipo: 'aviso',
-                    mensaje: 'Pago retenido por franquicia',
-                });
             }
-
-            this.mensajes.push({ tipo: 'informativo', mensaje: 'Calculo completo' });
         }
 
-        // TODO: Marcar visualmente los topes que no se superan, DEDUCIBLE, CAPITAL, FRANQUICIA
-
         // TODO: Mostrar mensajes de franquicia y deducible aplicados
-
-        // TODO: Crear paquete de instalación
 
         // TODO: Numeros a letras
 
@@ -271,7 +299,7 @@ export class PagosComponent implements OnInit {
     }
 
     f_submit(event: Event): boolean {
-        event.preventDefault();
+        /* event.preventDefault();
         // TODO: imprimir datos del formulario
         //console.log(this.form.controls);
 
@@ -279,10 +307,20 @@ export class PagosComponent implements OnInit {
         console.log(jsonObj);
 
         console.warn(this.form.value);
+        */
+
         // TODO: implementar servicio de validaciones
         // TODO: implementar servicio de guardado
-        event.preventDefault();
+
+        console.log('pagos', 'f_submit', 'INICIO llamada servicio');
+        this.pagosService.validarPago().subscribe((resp) => this.f_respuestaValidarPago(resp));
+        console.log('pagos', 'f_submit', 'FINAL llamada servicio');
 
         return true;
+    }
+
+    f_respuestaValidarPago(resp: any) {
+        console.log('pagos', 'f_respuestaValidarPago');
+        console.log(resp);
     }
 }

@@ -87,7 +87,7 @@
                             [input_importe]="iBruto.importeMask"
                             [input_moneda]="monedaPago"
                             [input_monedaCambio]="monedaContable"
-                            [input_disabled]="true"
+                            [disabled]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -100,6 +100,7 @@
                             [input_importe]="iDeducible.importeMask"
                             [input_moneda]="monedaPago"
                             [input_monedaCambio]="monedaContable"
+                            [estiloInput]="estiloDeducible"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -113,6 +114,7 @@
                             [input_moneda]="monedaPago"
                             [input_monedaCambio]="monedaContable"
                             (EventoImporteModificado)="f_ICapitalModificado($event)"
+                            [estiloInput]="estiloCapital"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -125,7 +127,7 @@
                             [input_importe]="iBase.importeMask"
                             [input_moneda]="monedaPago"
                             [input_monedaCambio]="monedaContable"
-                            [input_disabled]="true"
+                            [disabled]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -149,7 +151,7 @@
                             [input_importe]="iIva.importeMask"
                             [input_moneda]="monedaPago"
                             [input_monedaCambio]="monedaContable"
-                            [input_disabled]="true"
+                            [disabled]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -162,7 +164,7 @@
                             [input_importe]="iNeto.importeMask"
                             [input_moneda]="monedaPago"
                             [input_monedaCambio]="monedaContable"
-                            [input_disabled]="true"
+                            [disabled]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -176,6 +178,7 @@
                             [input_moneda]="monedaPago"
                             [input_monedaCambio]="monedaContable"
                             (EventoImporteModificado)="f_IFranquiciaModificado($event)"
+                            [estiloInput]="estiloFranquicia"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -188,7 +191,7 @@
                             [input_importe]="iTotal.importeMask"
                             [input_moneda]="monedaPago"
                             [input_monedaCambio]="monedaContable"
-                            [input_disabled]="true"
+                            [disabled]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -226,7 +229,7 @@
         <!-- Botton submit -->
         <div class="row">
             <div class="div col-md-12 themed-grid-col">
-                <button type="submit" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" (click)="f_submit($event)">
                     <fa-icon [icon]="['fas', 'plus-square']"></fa-icon> Crear pago
                 </button>
             </div>

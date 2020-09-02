@@ -41,13 +41,14 @@ export class InputMonedaComponent implements OnInit {
     @Input() input_monedaCambio: string;
 
     @Input() input_selectorMoneda: boolean = false;
-    @Input() input_disabled: boolean = false;
+    @Input() disabled: boolean = false;
+    @Input() estiloInput: object;
 
     @Output() EventoImporteModificado = new EventEmitter<number>();
     @Output() EventoImporteCambiado = new EventEmitter<number>();
 
     ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-        //console.log('input-moneda.ngOnChanges');
+        // console.log('input-moneda', 'ngOnChanges');
         // console.log(changes['input_moneda'].currentValue);
 
         // Recorremos la clase SimpleChange para tratar todos los cambios
@@ -60,6 +61,7 @@ export class InputMonedaComponent implements OnInit {
             switch (propName) {
                 case 'input_importe':
                     this._importe.importeMask = changedProp.currentValue;
+                    this._importe.isTouched = true;
                     break;
                 case 'input_moneda':
                     this.cmoneda = changedProp.currentValue; // usamos el setter
@@ -124,7 +126,7 @@ export class InputMonedaComponent implements OnInit {
     }
 
     public f_ActualizarOpcionesMascara(p_moneda: string): void {
-        // console.log('input-moneda.onChangeMoneda p_moneda: ', p_moneda);
+        // console.log('input-moneda', 'f_ActualizarOpcionesMascara', 'p_moneda: ', p_moneda);
 
         // el SETTER cmoneda se encarga de recalcular el importe, ahora hay que darle el formato
         // segun la nueva moneda (prefijo y decimales)
@@ -152,31 +154,17 @@ export class InputMonedaComponent implements OnInit {
     public onComplete() {}
 
     public set cmoneda(p_moneda: string) {
-        console.log('input-moneda', 'cmoneda', p_moneda);
+        // console.log('input-moneda', 'cmoneda', p_moneda);
+
+        // Actualizamos la moneda del importe, esto fuerza al recalculo del importe
         this._importe.moneda = new Moneda(p_moneda);
-        if (this._importe.importeMask != null) {
-            // si el campo INPUT ha sido modificado por el usuario
+
+        // Si el importe ha sido modificado actualizamos el importe del Input, sino
+        // mostramos null
+        if (this._importe.isTouched) {
+            // console.log('input-moneda', 'cmoneda', 'isTOUCHED', this._importe.importe);
             this._importe.importeMask =
                 this._importe.importe != NaN ? this._importe.importe.toString() : null;
-
-            // const moneda = new Moneda(p_moneda);
-
-            // this.mask.updateOptions({
-            //     mask: moneda.simbolo + ' num',
-            //     blocks: {
-            //         num: {
-            //             mask: Number,
-            //             thousandsSeparator: '.',
-            //             scale: moneda.numeroDecimales,
-            //             normalizeZeros: false,
-            //             padFractionalZeros: false,
-            //             signed: false,
-
-            //             min: 0,
-            //             max: 1000000000000,
-            //         },
-            //     },
-            // });
         }
     }
 
@@ -204,5 +192,7 @@ export class InputMonedaComponent implements OnInit {
         this.EventoImporteModificado.emit(this._importe.importe);
     }
 
-    isDisabled: boolean;
+    onInput() {
+        this._importe.isTouched = true;
+    }
 }
