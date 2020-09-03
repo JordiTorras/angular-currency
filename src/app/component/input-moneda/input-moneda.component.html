@@ -21,12 +21,12 @@
 <div>
     <span
         class="float-left input-moneda-contravalor"
-        *ngIf="_importe.moneda.codigoIso != _importe.monedaCambio.codigoIso"
+        *ngIf="_importe.moneda.codigoIso != _importe.monedaCambio.codigoIso && input_mostrarTasa"
     >
         (1 {{ _importe.moneda.codigoIso }} = {{ _importe.f_printTasaCambio(2) }}
         {{ _importe.monedaCambio.codigoIso }})
     </span>
-    <span class="float-right input-moneda-contravalor">
+    <span class="float-right input-moneda-contravalor" *ngIf="input_mostrarCambio">
         {{ _importe.f_printImporteCambio() }} {{ _importe.monedaCambio.codigoIso }}
     </span>
 </div>

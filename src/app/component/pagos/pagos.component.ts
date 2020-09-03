@@ -34,7 +34,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
 import { RateResponse } from 'src/app/class/cambio-response';
-import { Tasas } from 'src/app/class';
+import { Tasas, Moneda } from 'src/app/class';
 
 @Component({
     selector: 'app-pagos',
@@ -256,11 +256,20 @@ export class PagosComponent implements OnInit {
         this.form.itotal = value;
     }
 
-    f_ILiquidacionModificado(e: any): void {
+    f_ILiquidacionModificado(e: number): void {
         //console.log('pagos.componente.ts.f_ILiquidacionModificado: ', e);
 
         this.iLiquidacion.importe = e; // estoy llamando al SETTER
-        this.form.ibruto.importe = this.iLiquidacion.importeCambio;
+        // this.form.ibruto.importe = this.iLiquidacion.importeCambio;
+
+        this.f_calcularTotales();
+    }
+
+    f_MLiquidacionModificada(e: string): void {
+        // console.log('pagos.componente.ts.f_MLiquidacionModificad: ', e);
+
+        this.iLiquidacion.moneda = new Moneda(e);
+        this.form.monedaLiquidacion = e;
 
         this.f_calcularTotales();
     }
@@ -282,7 +291,8 @@ export class PagosComponent implements OnInit {
     }
 
     f_calcularTotales(): void {
-        if (this.form.ibruto.importe != null && this.form.ibruto.importe != undefined) {
+        //if (this.form.ibruto.importeCambio != null && this.form.ibruto.importeCambio != undefined) {
+        if (this.form.iliquidacion.importeCambio) {
             // Calculo importe base
             // BASE = MIN((MAX(BRUTO - NVL(DEDUCIBLE, 0), 0), NVL(CAPITAL, ∞))
 
@@ -295,6 +305,8 @@ export class PagosComponent implements OnInit {
                     0
                 )
             ); */
+
+            this.iBruto.importe = this.form.iliquidacion.importeCambio;
 
             const t1: number =
                 this.form.ibruto.importe -
@@ -381,7 +393,7 @@ export class PagosComponent implements OnInit {
         //('pagos', 'f_submit', 'INICIO llamada servicio');
         this.blockUI.start('Validando pago ...'); //inside method
         this.pagosService.validarPago().subscribe((resp) => this.f_respuestaValidarPago(resp));
-        console.log('pagos', 'f_submit', 'FINAL llamada servicio');
+        // console.log('pagos', 'f_submit', 'FINAL llamada servicio');
 
         return true;
     }
@@ -392,7 +404,7 @@ export class PagosComponent implements OnInit {
         // console.log(resp);
 
         if (Object.keys(resp.warnings).length > 0 || Object.keys(resp.errors).length > 0) {
-            console.log('hay errores');
+            console.error('hay errores');
         } else {
             this.blockUI.start('Guardando datos ...');
             this.pagosService.GuardarPago().subscribe((resp) => this.f_respuestaGuardarPago(resp));
@@ -403,7 +415,6 @@ export class PagosComponent implements OnInit {
         this.blockUI.stop();
         // console.log('pagos', 'f_respuestaGuardarPago');
     }
-
     /*
      * //DONE en este punto llamo al servicio para obtener la tasa se cambio, cuando responde el servicio
      * actualizo la fecha 'fechaCambioPublica' para que se propage el cambio a todos los Input-Moneda
@@ -425,7 +436,19 @@ export class PagosComponent implements OnInit {
     }
 
     f_respuestaCambioService(resp: RateResponse) {
-        // console.log(resp);
+        // console.log('pagos', 'f_respuestaCambioService', resp);
+        // la fecha de cambio publica es la que propagamos a los input-moneda
         this.fechaCambioPublica = resp.start_date;
+
+        this.iLiquidacion.fechaCambio = new Date(this.fechaCambioPublica);
+        this.iBruto.fechaCambio = new Date(this.fechaCambioPublica);
+        this.iDeducible.fechaCambio = new Date(this.fechaCambioPublica);
+        this.iCapital.fechaCambio = new Date(this.fechaCambioPublica);
+        this.iBase.fechaCambio = new Date(this.fechaCambioPublica);
+        this.iIva.fechaCambio = new Date(this.fechaCambioPublica);
+        this.iFranquicia.fechaCambio = new Date(this.fechaCambioPublica);
+        this.iTotal.fechaCambio = new Date(this.fechaCambioPublica);
+
+        this.f_calcularTotales();
     }
 }

@@ -7,12 +7,10 @@ import {
     SimpleChange,
     forwardRef,
 } from '@angular/core';
-import { FormGroupDirective, ControlContainer, FormControl, Validators } from '@angular/forms';
 
 import { MonedasJsonService } from 'src/app/services';
 import { ImporteComponente } from 'src/app/component/input-moneda/ImporteComponente';
 import { Moneda } from 'src/app/class/moneda';
-import { Importe } from 'src/app/class/importe';
 import IMask from 'imask';
 
 @Component({
@@ -42,11 +40,14 @@ export class InputMonedaComponent implements OnInit {
     @Input() input_fechaCambio: string;
 
     @Input() input_selectorMoneda: boolean = false;
+    @Input() input_mostrarTasa: boolean = false;
+    @Input() input_mostrarCambio: boolean = false;
     @Input() disabled: boolean = false;
     @Input() estiloInput: object;
 
     @Output() EventoImporteModificado = new EventEmitter<number>();
     @Output() EventoImporteCambiado = new EventEmitter<number>();
+    @Output() EventoMonedaCambiada = new EventEmitter<string>();
 
     ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
         // console.log('input-moneda', 'ngOnChanges');
@@ -73,7 +74,6 @@ export class InputMonedaComponent implements OnInit {
                     this.f_ActualizarOpcionesMascara(changedProp.currentValue);
                     break;
                 case 'input_fechaCambio':
-                    const d: Date = new Date(changedProp.currentValue);
                     this._importe.fechaCambio = new Date(changedProp.currentValue);
                     break;
             }
@@ -112,7 +112,8 @@ export class InputMonedaComponent implements OnInit {
         this._importe = new ImporteComponente(
             this.input_importe,
             this.input_moneda,
-            this.input_monedaCambio
+            this.input_monedaCambio,
+            new Date(this.input_fechaCambio)
         );
         this.f_ActualizarOpcionesMascara(this.input_moneda);
     }
@@ -154,6 +155,8 @@ export class InputMonedaComponent implements OnInit {
                 },
             },
         });
+
+        this.EventoMonedaCambiada.emit(this._importe.moneda.codigoIso);
     }
 
     public onComplete() {}

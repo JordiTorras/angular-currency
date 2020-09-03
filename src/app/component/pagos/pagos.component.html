@@ -86,7 +86,10 @@
                         [input_fechaCambio]="fechaCambioPublica"
                         [input_monedaCambio]="monedaPago"
                         [input_selectorMoneda]="true"
+                        [input_mostrarTasa]="true"
+                        [input_mostrarCambio]="true"
                         (EventoImporteCambiado)="f_ILiquidacionModificado($event)"
+                        (EventoMonedaCambiada)="f_MLiquidacionModificada($event)"
                     ></app-input-moneda>
                 </div>
                 <!-- <p class="help error">Es un campo requerido</p> -->
@@ -106,6 +109,8 @@
                             [input_moneda]="monedaPago"
                             [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
+                            [input_mostrarTasa]="true"
+                            [input_mostrarCambio]="true"
                             [disabled]="true"
                         ></app-input-moneda>
                     </div>
@@ -120,6 +125,8 @@
                             [input_moneda]="monedaPago"
                             [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
+                            [input_mostrarTasa]="false"
+                            [input_mostrarCambio]="true"
                             [estiloInput]="estiloDeducible"
                         ></app-input-moneda>
                     </div>
@@ -136,6 +143,8 @@
                             [input_monedaCambio]="monedaContable"
                             (EventoImporteModificado)="f_ICapitalModificado($event)"
                             [estiloInput]="estiloCapital"
+                            [input_mostrarTasa]="false"
+                            [input_mostrarCambio]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -150,6 +159,8 @@
                             [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
+                            [input_mostrarTasa]="false"
+                            [input_mostrarCambio]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -175,6 +186,7 @@
                             [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
+                            [input_mostrarCambio]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -189,6 +201,7 @@
                             [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
+                            [input_mostrarCambio]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -204,6 +217,8 @@
                             [input_monedaCambio]="monedaContable"
                             (EventoImporteModificado)="f_IFranquiciaModificado($event)"
                             [estiloInput]="estiloFranquicia"
+                            [input_mostrarTasa]="false"
+                            [input_mostrarCambio]="true"
                         ></app-input-moneda>
                     </div>
                 </div>
@@ -218,6 +233,8 @@
                             [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
+                            [input_mostrarTasa]="true"
+                            [input_mostrarCambio]="true"
                         ></app-input-moneda>
                     </div>
                 </div>

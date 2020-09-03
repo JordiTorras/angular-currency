@@ -116,6 +116,14 @@ export class Importe {
     }
 
     private f_obtenerTasaCambio(p_monedaOrigen?: string, p_monedaDestino?: string): void {
+     /*    console.log(
+            'importe',
+            'obtenerTasaCambio',
+            p_monedaOrigen,
+            p_monedaDestino,
+            this._fechaCambio
+        ); */
+
         if (p_monedaOrigen == null) {
             p_monedaOrigen = this._moneda.codigoIso;
         }
@@ -147,7 +155,6 @@ export class Importe {
 
             this._tasaCambio = monInicial2monBase * monBase2monFinal;
         }
-        // console.log('importe', 'obtenerTasaCambio', this._fechaCambio);
     }
 
     private f_calcularCambio(p_importe: number): number {

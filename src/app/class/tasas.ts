@@ -17,13 +17,14 @@ export class Tasas {
     }
 
     f_obtenerTasa(p_moneda: string, p_fecha: Date): number {
+        //FIXME sustituir 'en-US' por el LOCALE
+        // console.log('tasas', 'f_obtenerTasa', p_moneda, p_fecha);
+        const d: string = formatDate(p_fecha, 'yyyy-MM-dd', 'en-US');
+        // console.log('tasas', 'f_obtenerTasa', d, this.tasas[d][p_moneda]);
+
         if (p_moneda === 'UF') {
             return 0.000377;
         }
-        //FIXME sustituir 'en-US' por el LOCALE
-        const d: string = formatDate(p_fecha, 'yyyy-MM-dd', 'en-US');
-
-        // console.log('tasas', 'f_obtenerTasa', d, this.tasas[d][p_moneda]);
 
         return this.tasas[d][p_moneda];
     }
