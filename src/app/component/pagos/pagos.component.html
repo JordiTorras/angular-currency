@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-12 themed-grid-col">
                 Lista de monedas (objeto): Cargado = {{ listaMonedas.cargada }}<br />
-                Lista de tasa de cambio: Cargado = {{ listacambios.cargada }}<br />
+                Lista de tasa de cambio: Cargado = {{ listaCambios.cargada }}<br />
                 Lista de monedas (json): Cargado = {{ listaMonedasJson.cargada }}<br />
                 <div>
                     Carga de iconos:
@@ -26,6 +26,23 @@
 
         <div class="row">
             <div class="col-md-12 themed-grid-col">
+                <!-- fecha de cambio -->
+                <label for="fecha-cambio" class="mr-2">Fecha de liquidacion</label>
+                <!--                 <input
+                    id="fecha-cambio"
+                    type="date"
+                    [ngModel]="fechaCambio | date: 'yyyy-MM-dd'"
+                    (ngModelChange)="fechaCambio = $event"
+                /> -->
+                <input
+                    id="fecha-cambio"
+                    type="date"
+                    [(ngModel)]="fechaCambio"
+                    (change)="onChangeFecha($event.target.value)"
+                    [max]="today | date: 'yyyy-MM-dd'"
+                />
+                <small> FIXME: no esta controlado la falta de datos a una fecha</small>
+                <br />
                 <!-- Moneda de liquidacion -->
                 <label for="sel-monliq" class="mr-2">Moneda de liquidación:</label>
                 <select id="sel-monliq" [(ngModel)]="monedaLiquidacion" class="mr-4">
@@ -66,6 +83,7 @@
                     <app-input-moneda
                         [input_importe]="iLiquidacion.importeMask"
                         [input_moneda]="monedaLiquidacion"
+                        [input_fechaCambio]="fechaCambioPublica"
                         [input_monedaCambio]="monedaPago"
                         [input_selectorMoneda]="true"
                         (EventoImporteCambiado)="f_ILiquidacionModificado($event)"
@@ -86,6 +104,7 @@
                         <app-input-moneda
                             [input_importe]="iBruto.importeMask"
                             [input_moneda]="monedaPago"
+                            [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
                         ></app-input-moneda>
@@ -99,6 +118,7 @@
                         <app-input-moneda
                             [input_importe]="iDeducible.importeMask"
                             [input_moneda]="monedaPago"
+                            [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [estiloInput]="estiloDeducible"
                         ></app-input-moneda>
@@ -112,6 +132,7 @@
                         <app-input-moneda
                             [input_importe]="iCapital.importeMask"
                             [input_moneda]="monedaPago"
+                            [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             (EventoImporteModificado)="f_ICapitalModificado($event)"
                             [estiloInput]="estiloCapital"
@@ -126,6 +147,7 @@
                         <app-input-moneda
                             [input_importe]="iBase.importeMask"
                             [input_moneda]="monedaPago"
+                            [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
                         ></app-input-moneda>
@@ -150,6 +172,7 @@
                         <app-input-moneda
                             [input_importe]="iIva.importeMask"
                             [input_moneda]="monedaPago"
+                            [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
                         ></app-input-moneda>
@@ -163,6 +186,7 @@
                         <app-input-moneda
                             [input_importe]="iNeto.importeMask"
                             [input_moneda]="monedaPago"
+                            [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
                         ></app-input-moneda>
@@ -176,6 +200,7 @@
                         <app-input-moneda
                             [input_importe]="iFranquicia.importeMask"
                             [input_moneda]="monedaPago"
+                            [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             (EventoImporteModificado)="f_IFranquiciaModificado($event)"
                             [estiloInput]="estiloFranquicia"
@@ -190,6 +215,7 @@
                         <app-input-moneda
                             [input_importe]="iTotal.importeMask"
                             [input_moneda]="monedaPago"
+                            [input_fechaCambio]="fechaCambioPublica"
                             [input_monedaCambio]="monedaContable"
                             [disabled]="true"
                         ></app-input-moneda>

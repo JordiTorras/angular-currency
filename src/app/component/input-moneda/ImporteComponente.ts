@@ -38,7 +38,13 @@ export class ImporteComponente extends Importe {
         return super.importe;
     }
 
-    public f_printTasaCambio(dec: number): string {
+    // public set fechaCambio(val: Date) {
+    //     super.fechaCambio = val;
+    //     let a = this.f_printTasaCambio();
+    // }
+
+    //FIXME no actualiza la tasa de cambio en pantalla
+    public f_printTasaCambio(dec?: number): string {
         return super.tasaCambio.toFixed(
             dec ? (super.tasaCambio < 0.1 ? 6 : super.monedaCambio.numeroDecimales) : dec
         );

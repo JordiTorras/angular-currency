@@ -1,4 +1,5 @@
 import { Rate } from 'src/app/class/index';
+import { formatDate } from '@angular/common';
 
 /*
     Creamos una classe, por que la función de esta clase es gesionar las tasas
@@ -9,16 +10,21 @@ import { Rate } from 'src/app/class/index';
 */
 
 export class Tasas {
-  private tasas: { [key: string]: Rate };
+    private tasas: { [key: string]: Rate };
 
-  constructor(tasas: { [key: string]: Rate }) {
-    this.tasas = tasas;
-  }
-
-  f_obtenerTasa(p_moneda: string): number {
-    if (p_moneda === 'UF') {
-      return 0.000377;
+    constructor(tasas: { [key: string]: Rate }) {
+        this.tasas = tasas;
     }
-    return this.tasas['2020-08-21'][p_moneda];
-  }
+
+    f_obtenerTasa(p_moneda: string, p_fecha: Date): number {
+        if (p_moneda === 'UF') {
+            return 0.000377;
+        }
+        //FIXME sustituir 'en-US' por el LOCALE
+        const d: string = formatDate(p_fecha, 'yyyy-MM-dd', 'en-US');
+
+        // console.log('tasas', 'f_obtenerTasa', d, this.tasas[d][p_moneda]);
+
+        return this.tasas[d][p_moneda];
+    }
 }

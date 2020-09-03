@@ -39,6 +39,7 @@ export class InputMonedaComponent implements OnInit {
     @Input() input_importe: number;
     @Input() input_moneda: string;
     @Input() input_monedaCambio: string;
+    @Input() input_fechaCambio: string;
 
     @Input() input_selectorMoneda: boolean = false;
     @Input() disabled: boolean = false;
@@ -70,6 +71,10 @@ export class InputMonedaComponent implements OnInit {
                 case 'input_monedaCambio':
                     this.cmonedaCambio = changedProp.currentValue;
                     this.f_ActualizarOpcionesMascara(changedProp.currentValue);
+                    break;
+                case 'input_fechaCambio':
+                    const d: Date = new Date(changedProp.currentValue);
+                    this._importe.fechaCambio = new Date(changedProp.currentValue);
                     break;
             }
         }

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, LOCALE_ID, Inject } from '@angular/core';
 import { CambioService, MonedasService, MonedasJsonService } from 'src/app/services';
 import { ImporteComponente } from '../input-moneda/ImporteComponente';
 import { PagosService } from 'src/app/services/pagos.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { formatDate } from '@angular/common';
+import { gl_tasas } from 'src/app/services/cambio.service';
 
 // Iconos
 /**
@@ -29,6 +31,10 @@ import {
 // Add icons to the library for convenient access in other components
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
+import { DatePipe } from '@angular/common';
+import { RateResponse } from 'src/app/class/cambio-response';
+import { Tasas } from 'src/app/class';
 
 @Component({
     selector: 'app-pagos',
@@ -37,8 +43,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class PagosComponent implements OnInit {
     @BlockUI() blockUI: NgBlockUI;
-
-    form: FormGroup; // definimos el formulario
 
     listaIVA: { valor: number; descripcion: string }[] = [
         { valor: 0, descripcion: 'Exento de IVA' },
@@ -50,31 +54,50 @@ export class PagosComponent implements OnInit {
     estiloCapital: {};
     estiloFranquicia: {};
 
-    //background-color: rgba(86, 61, 124, 0.05)
+    today: Date = new Date();
+    fechaCambioPublica: string;
 
-    monedaLiquidacion: string = 'USD';
-    monedaPago: string = 'EUR';
-    monedaContable: string = 'ARS';
-    pIVA = 0;
-
-    private _iliquidacion: ImporteComponente;
-    private _ibruto: ImporteComponente;
-    private _ideducible: ImporteComponente;
-    private _icapital: ImporteComponente;
-    private _ibase: ImporteComponente;
-    private _iiva: ImporteComponente;
-    private _ineto: ImporteComponente;
-    private _ifranquicia: ImporteComponente;
-    private _itotal: ImporteComponente;
+    private form: {
+        fechaCambio: string;
+        monedaLiquidacion: string;
+        monedaPago: string;
+        monedaContable: string;
+        pIVA: number;
+        iliquidacion: ImporteComponente;
+        ibruto: ImporteComponente;
+        ideducible: ImporteComponente;
+        icapital: ImporteComponente;
+        ibase: ImporteComponente;
+        iiva: ImporteComponente;
+        ineto: ImporteComponente;
+        ifranquicia: ImporteComponente;
+        itotal: ImporteComponente;
+    } = {
+        fechaCambio: null,
+        monedaLiquidacion: 'USD',
+        monedaPago: 'EUR',
+        monedaContable: environment.monedaInstalacion,
+        pIVA: 0,
+        iliquidacion: null,
+        ibruto: null,
+        ideducible: null,
+        icapital: null,
+        ibase: null,
+        iiva: null,
+        ineto: null,
+        ifranquicia: null,
+        itotal: null,
+    };
 
     mensajes: { tipo: string; mensaje: string }[] = [];
 
     constructor(
         public listaMonedas: MonedasService,
         public listaMonedasJson: MonedasJsonService,
-        public listacambios: CambioService,
+        public listaCambios: CambioService,
         public library: FaIconLibrary,
-        private pagosService: PagosService
+        private pagosService: PagosService,
+        @Inject(LOCALE_ID) private locale: string
     ) {
         // Add multiple icons to the library
         library.addIcons(
@@ -106,15 +129,23 @@ export class PagosComponent implements OnInit {
          * no podemos inicializar los importes hasta que no se ha inicilizado el componente para
          * poder usar el valor de las monedas
          */
-        this._iliquidacion = new ImporteComponente(null, this.monedaLiquidacion, this.monedaPago);
-        this._ibruto = new ImporteComponente(null, this.monedaPago);
-        this._ideducible = new ImporteComponente(20, this.monedaPago);
-        this._icapital = new ImporteComponente(null, this.monedaPago);
-        this._ibase = new ImporteComponente(null, this.monedaPago);
-        this._iiva = new ImporteComponente(null, this.monedaPago);
-        this._ineto = new ImporteComponente(null, this.monedaPago);
-        this._ifranquicia = new ImporteComponente(null, this.monedaPago);
-        this._itotal = new ImporteComponente(null, this.monedaPago);
+
+        this.form.fechaCambio = formatDate(Date.now(), 'yyyy-MM-dd', this.locale);
+        this.fechaCambioPublica = this.form.fechaCambio;
+
+        this.form.iliquidacion = new ImporteComponente(
+            null,
+            this.form.monedaLiquidacion,
+            this.form.monedaPago
+        );
+        this.form.ibruto = new ImporteComponente(null, this.form.monedaPago);
+        this.form.ideducible = new ImporteComponente(20, this.form.monedaPago);
+        this.form.icapital = new ImporteComponente(null, this.form.monedaPago);
+        this.form.ibase = new ImporteComponente(null, this.form.monedaPago);
+        this.form.iiva = new ImporteComponente(null, this.form.monedaPago);
+        this.form.ineto = new ImporteComponente(null, this.form.monedaPago);
+        this.form.ifranquicia = new ImporteComponente(null, this.form.monedaPago);
+        this.form.itotal = new ImporteComponente(null, this.form.monedaPago);
 
         /**
          * inicializamos los importes
@@ -128,72 +159,108 @@ export class PagosComponent implements OnInit {
         // this._icapital;
     }
 
+    public get fechaCambio(): string {
+        return this.form.fechaCambio;
+    }
+
+    public set fechaCambio(value: string) {
+        this.form.fechaCambio = value;
+    }
+
+    public get monedaLiquidacion(): string {
+        return this.form.monedaLiquidacion;
+    }
+    public set monedaLiquidacion(value: string) {
+        this.form.monedaLiquidacion = value;
+    }
+
+    public get monedaPago(): string {
+        return this.form.monedaPago;
+    }
+    public set monedaPago(value: string) {
+        this.form.monedaPago = value;
+    }
+
+    public get monedaContable(): string {
+        return this.form.monedaContable;
+    }
+    public set monedaContable(value: string) {
+        this.form.monedaContable = value;
+    }
+
+    public get pIVA(): number {
+        return this.form.pIVA;
+    }
+    public set pIVA(value: number) {
+        this.form.pIVA = value;
+    }
+
     public get iLiquidacion(): ImporteComponente {
-        return this._iliquidacion;
+        return this.form.iliquidacion;
     }
     public set iLiquidacion(value: ImporteComponente) {
-        this._iliquidacion = value;
+        this.form.iliquidacion = value;
     }
 
     public get iBruto(): ImporteComponente {
-        return this._ibruto;
+        return this.form.ibruto;
     }
     public set iBruto(value: ImporteComponente) {
-        this._ibruto = value;
+        this.form.ibruto = value;
     }
 
     public get iDeducible(): ImporteComponente {
-        return this._ideducible;
+        return this.form.ideducible;
     }
     public set iDeducible(value: ImporteComponente) {
-        this._ideducible = value;
+        this.form.ideducible = value;
     }
 
     public get iCapital(): ImporteComponente {
-        return this._icapital;
+        return this.form.icapital;
     }
     public set iCapital(value: ImporteComponente) {
-        this._icapital = value;
+        this.form.icapital = value;
     }
     public get iBase(): ImporteComponente {
-        return this._ibase;
+        return this.form.ibase;
     }
     public set iBase(value: ImporteComponente) {
-        this._ibase = value;
+        this.form.ibase = value;
     }
 
     public get iIva(): ImporteComponente {
-        return this._iiva;
+        return this.form.iiva;
     }
     public set iIva(value: ImporteComponente) {
-        this._iiva = value;
+        this.form.iiva = value;
     }
 
     public get iNeto(): ImporteComponente {
-        return this._ineto;
+        return this.form.ineto;
     }
     public set iNeto(value: ImporteComponente) {
-        this._ineto = value;
+        this.form.ineto = value;
     }
 
     public get iFranquicia(): ImporteComponente {
-        return this._ifranquicia;
+        return this.form.ifranquicia;
     }
     public set iFranquicia(value: ImporteComponente) {
-        this._ifranquicia = value;
+        this.form.ifranquicia = value;
     }
     public get iTotal(): ImporteComponente {
-        return this._itotal;
+        return this.form.itotal;
     }
     public set iTtotal(value: ImporteComponente) {
-        this._itotal = value;
+        this.form.itotal = value;
     }
 
     f_ILiquidacionModificado(e: any): void {
         //console.log('pagos.componente.ts.f_ILiquidacionModificado: ', e);
 
         this.iLiquidacion.importe = e; // estoy llamando al SETTER
-        this._ibruto.importe = this.iLiquidacion.importeCambio;
+        this.form.ibruto.importe = this.iLiquidacion.importeCambio;
 
         this.f_calcularTotales();
     }
@@ -215,7 +282,7 @@ export class PagosComponent implements OnInit {
     }
 
     f_calcularTotales(): void {
-        if (this._ibruto.importe != null && this._ibruto.importe != undefined) {
+        if (this.form.ibruto.importe != null && this.form.ibruto.importe != undefined) {
             // Calculo importe base
             // BASE = MIN((MAX(BRUTO - NVL(DEDUCIBLE, 0), 0), NVL(CAPITAL, ∞))
 
@@ -230,28 +297,30 @@ export class PagosComponent implements OnInit {
             ); */
 
             const t1: number =
-                this._ibruto.importe - (this._ideducible.importe ? this._ideducible.importe : 0);
+                this.form.ibruto.importe -
+                (this.form.ideducible.importe ? this.form.ideducible.importe : 0);
             const t2: number = Math.max(t1, 0);
-            const t3: number = this._icapital.importe ? this._icapital.importe : Infinity;
+            const t3: number = this.form.icapital.importe ? this.form.icapital.importe : Infinity;
 
-            this._ibase.importe = Math.min(t3, t2);
+            this.form.ibase.importe = Math.min(t3, t2);
 
             // Calculo impuestos
             // IMPUESTOS = BASE * PORCENTAJE
-            this._iiva.importe = +((this._ibase.importe * this.pIVA) / 100).toPrecision(
-                this.iBase.moneda.numeroDecimales
-            );
+            this.form.iiva.importe = +(
+                (this.form.ibase.importe * this.form.pIVA) /
+                100
+            ).toPrecision(this.iBase.moneda.numeroDecimales);
 
             // Calculo importe neto
             // NETO = BASE + SUM(IMPUESTOS) + SUM(-RETENCIONES)
-            this._ineto.importe = this._ibase.importe + this._iiva.importe;
+            this.form.ineto.importe = this.form.ibase.importe + this.form.iiva.importe;
 
             // Calculo importe total
             // SI (NETO > FRANQUICIA) => TOTAL = NETO  : TOTAL = 0 (retenido por franquicia)
 
-            const t4: number = this._ifranquicia.importe ? this._ifranquicia.importe : 0;
+            const t4: number = this.form.ifranquicia.importe ? this.form.ifranquicia.importe : 0;
 
-            this.iTotal.importe = this._ineto.importe >= t4 ? this._ineto.importe : 0;
+            this.iTotal.importe = this.form.ineto.importe >= t4 ? this.form.ineto.importe : 0;
 
             /*
                 Gestion de los mensajes por pantalla
@@ -261,25 +330,29 @@ export class PagosComponent implements OnInit {
             this.estiloCapital = {};
             this.estiloFranquicia = {};
 
-            if (this._ibruto.importe < this._ideducible.importe) {
+            if (this.form.ibruto.importe < this.form.ideducible.importe) {
                 this.estiloDeducible = {
                     'background-color': 'rgba(255, 255, 0, 0.15)',
                 };
-                this.mensajes.push({ tipo: 'aviso', mensaje: 'Pago 0 por deducible' });
+                this.mensajes.push({ tipo: 'informativo', mensaje: 'Pago 0 por deducible' });
             }
 
-            if (this._icapital.importe) {
+            if (this.form.icapital.importe) {
                 if (t3 /* capital */ < t2 /* aplicado deducible */) {
                     this.estiloCapital = {
                         'background-color': 'rgba(255, 255, 0, 0.15)',
                     };
+                    this.mensajes.push({
+                        tipo: 'informativo',
+                        mensaje: 'Pago ajustado al capital pendiente',
+                    });
                 }
             }
 
-            if (this._ifranquicia.importe) {
-                if (this._ineto.importe >= t4) {
+            if (this.form.ifranquicia.importe) {
+                if (this.form.ineto.importe >= t4) {
                     this.mensajes.push({
-                        tipo: 'aviso',
+                        tipo: 'informativo',
                         mensaje: 'Pago liberado supera franqucia',
                     });
                 } else {
@@ -294,27 +367,18 @@ export class PagosComponent implements OnInit {
             }
         }
 
-        // TODO: Mostrar mensajes de franquicia y deducible aplicados
-
         // TODO: Numeros a letras
 
         // TODO: Franquicia y Capita Maximo
     }
 
     f_submit(event: Event): boolean {
-        /* event.preventDefault();
-        // TODO: imprimir datos del formulario
-        //console.log(this.form.controls);
+        //event.preventDefault();
 
-        let jsonObj = JSON.stringify(this.form.value);
-        console.log(jsonObj);
+        let jsonObj = JSON.stringify(this.form);
+        console.warn(jsonObj);
 
-        console.warn(this.form.value);
-        */
-
-        // TODO: implementar servicio de guardado
-
-        console.log('pagos', 'f_submit', 'INICIO llamada servicio');
+        //('pagos', 'f_submit', 'INICIO llamada servicio');
         this.blockUI.start('Validando pago ...'); //inside method
         this.pagosService.validarPago().subscribe((resp) => this.f_respuestaValidarPago(resp));
         console.log('pagos', 'f_submit', 'FINAL llamada servicio');
@@ -324,13 +388,44 @@ export class PagosComponent implements OnInit {
 
     f_respuestaValidarPago(resp: any) {
         this.blockUI.stop();
-        console.log('pagos', 'f_respuestaValidarPago');
-        console.log(resp);
+        // console.log('pagos', 'f_respuestaValidarPago');
+        // console.log(resp);
 
         if (Object.keys(resp.warnings).length > 0 || Object.keys(resp.errors).length > 0) {
             console.log('hay errores');
         } else {
-            console.log('no hay errores');
+            this.blockUI.start('Guardando datos ...');
+            this.pagosService.GuardarPago().subscribe((resp) => this.f_respuestaGuardarPago(resp));
         }
+    }
+
+    f_respuestaGuardarPago(resp: any) {
+        this.blockUI.stop();
+        // console.log('pagos', 'f_respuestaGuardarPago');
+    }
+
+    /*
+     * //DONE en este punto llamo al servicio para obtener la tasa se cambio, cuando responde el servicio
+     * actualizo la fecha 'fechaCambioPublica' para que se propage el cambio a todos los Input-Moneda
+     * y para ello tengo que hacer el update de la variable global gl_tasas, esta actualización la deberia
+     * realizar el servicio, pero si la susbripcion la deribo al sercicio como podre gestionar desde aqui
+     * la respuesta?
+     */
+    onChangeFecha(e: string) {
+        const dateConversion = new Date(e);
+
+        // si la fecha es valida llamamos el servicio
+        if (dateConversion.toString() !== 'Invalid Date') {
+            this.listaCambios.cargada = false;
+            this.listaCambios.f_obtenerTasaDeCambioService(e).subscribe((resp) => {
+                this.listaCambios.f_respuestaTasaDeCambioService(resp);
+                this.f_respuestaCambioService(resp);
+            });
+        }
+    }
+
+    f_respuestaCambioService(resp: RateResponse) {
+        // console.log(resp);
+        this.fechaCambioPublica = resp.start_date;
     }
 }

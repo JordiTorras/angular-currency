@@ -34,4 +34,9 @@ export class PagosService {
         return of({ warnings: {}, errors: {} }).pipe(delay(500));
         //return of(respuesta).pipe(delay(500));
     }
+
+    GuardarPago() {
+        // simulate http.get()
+        return of({ respuesta: 0 }).pipe(delay(500));
+    }
 }

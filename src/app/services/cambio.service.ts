@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { formatDate } from '@angular/common';
 import { Rate, RateResponse } from 'src/app/class/cambio-response';
 import { Tasas } from 'src/app/class/tasas';
+import { delay } from 'rxjs/operators';
 
 export let gl_tasas: Tasas;
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class CambioService {
-  public cambio: { [key: string]: Rate };
-  public cargada: boolean = false;
+    public cambio: { [key: string]: Rate };
+    public cargada: boolean = false;
 
-  /*
+    /*
       https://leiva.io/2020/03/29/angular-precargar-datos-antes-de-arrancar/
 
      Para evitar que los datos se carguen despues de iniciar la aplicación, deberemos registrar
@@ -43,40 +45,74 @@ export class CambioService {
   )
   */
 
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  f_obtenerTasaDeCambio() {
-    // console.log('INICIO constructor CambioService');
-    /* return this.http
-      .get<RateResponse>(
-        'https://api.exchangerate.host/latest?base=ARS&symbols=USD,EUR,ARS,CLP,COP'
-      )
-      .subscribe((resp) => {
-        console.log('RESPUESTA API');
-        console.log(resp);
+    f_obtenerTasaDeCambio() {
+        //'https://api.exchangerate.host/timeseries?start_date=2020-08-01&end_date=2020-08-21&symbols=USD,EUR,ARS,CLP,COP&base=ARS'
 
-        this.cambio = resp.rates;
-        console.log(this.cambio);
-      }); */
+        const fechaFinal: string = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+        let d: Date = new Date();
+        const fechaInicial: string = formatDate(d.setDate(d.getDate() - 30), 'yyyy-MM-dd', 'en-US');
 
-    /* 
+        const url: string =
+            'https://api.exchangerate.host/timeseries?' +
+            'start_date=' +
+            fechaInicial +
+            '&end_date=' +
+            fechaFinal +
+            '&symbols=USD,EUR,ARS,CLP,COP' +
+            '&base=ARS';
+
+        // console.log(url);
+
+        /* 
       Se tiene que usar una Promesa y no un Observable para que carge antes de iniciar la
       aplicación (funciona como una llamada sincrona, aunque no lo és, la app espera a 
       recibir la respuesta)
     */
-    return this.http
-      .get<RateResponse>(
-        //'https://api.exchangerate.host/latest?base=ARS&symbols=USD,EUR,ARS,CLP,COP'
-        'https://api.exchangerate.host/timeseries?start_date=2020-08-01&end_date=2020-08-21&symbols=USD,EUR,ARS,CLP,COP&base=ARS'
-      )
-      .toPromise()
-      .then((resp) => {
-        // console.log('RESPUESTA API');
-        // console.log(resp);
+        return (
+            this.http
 
+                .get<RateResponse>(url)
+                //'https://api.exchangerate.host/latest?base=ARS&symbols=USD,EUR,ARS,CLP,COP'
+                //'https://api.exchangerate.host/timeseries?start_date=2020-08-01&end_date=2020-08-21&symbols=USD,EUR,ARS,CLP,COP&base=ARS'
+                .toPromise()
+                .then((resp) => {
+                    // console.log('RESPUESTA API');
+                    // console.log(resp);
+
+                    this.cambio = resp.rates;
+                    this.cargada = true;
+                    gl_tasas = new Tasas(this.cambio);
+                })
+        );
+    }
+
+    f_obtenerTasaDeCambioService(p_fecha?: string) {
+        //'https://api.exchangerate.host/timeseries?start_date=2020-08-01&end_date=2020-08-21&symbols=USD,EUR,ARS,CLP,COP&base=ARS'
+
+        if (p_fecha) {
+            null;
+        } else {
+            p_fecha = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+        }
+        const url: string =
+            'https://api.exchangerate.host/timeseries?' +
+            'start_date=' +
+            p_fecha +
+            '&end_date=' +
+            p_fecha +
+            '&symbols=USD,EUR,ARS,CLP,COP' +
+            '&base=ARS';
+
+        // console.log(url);
+        // le pongo un delay explicitamente para dar un margen de respuesta y ver como se comporta la aplicación
+        return this.http.get<RateResponse>(url).pipe(delay(500));
+    }
+
+    f_respuestaTasaDeCambioService(resp: RateResponse) {
         this.cambio = resp.rates;
         this.cargada = true;
         gl_tasas = new Tasas(this.cambio);
-      });
-  }
+    }
 }

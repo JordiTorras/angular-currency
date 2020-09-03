@@ -65,6 +65,7 @@ export class Importe {
     }
 
     public set fechaCambio(val: Date) {
+        this._fechaCambio = val;
         this.f_obtenerTasaCambio();
         this._importeCambio = this.f_calcularCambio(this._importe);
     }
@@ -127,21 +128,26 @@ export class Importe {
             // No hay una funcion para redondear decimales Math.round() solo redondea a enteros
             // hay que usar .toFixed que transforma el número en una cadena por eso luego hay que
             // volverlo a convertir en númerico con el +(string)
-            this._tasaCambio = +(1 / gl_tasas.f_obtenerTasa(p_monedaOrigen)).toFixed(6);
+            this._tasaCambio = +(
+                1 / gl_tasas.f_obtenerTasa(p_monedaOrigen, this._fechaCambio)
+            ).toFixed(6);
         } else {
             /**
              * De EUR a USD => EUR --> ARS --> USD
              */
             // EUR a ARS
-            let monInicial2monBase: number = +(1 / gl_tasas.f_obtenerTasa(p_monedaOrigen)).toFixed(
-                6
-            );
+            let monInicial2monBase: number = +(
+                1 / gl_tasas.f_obtenerTasa(p_monedaOrigen, this._fechaCambio)
+            ).toFixed(6);
 
             // ARS a USD
-            let monBase2monFinal: number = +gl_tasas.f_obtenerTasa(p_monedaDestino).toFixed(6);
+            let monBase2monFinal: number = +gl_tasas
+                .f_obtenerTasa(p_monedaDestino, this._fechaCambio)
+                .toFixed(6);
 
             this._tasaCambio = monInicial2monBase * monBase2monFinal;
         }
+        // console.log('importe', 'obtenerTasaCambio', this._fechaCambio);
     }
 
     private f_calcularCambio(p_importe: number): number {
