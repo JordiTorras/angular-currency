@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CambioService, MonedasService, MonedasJsonService } from 'src/app/services';
 import { ImporteComponente } from '../input-moneda/ImporteComponente';
 import { PagosService } from 'src/app/services/pagos.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 // Iconos
 /**
@@ -35,6 +36,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
     styleUrls: ['./pagos.component.css'],
 })
 export class PagosComponent implements OnInit {
+    @BlockUI() blockUI: NgBlockUI;
+
     form: FormGroup; // definimos el formulario
 
     listaIVA: { valor: number; descripcion: string }[] = [
@@ -309,10 +312,10 @@ export class PagosComponent implements OnInit {
         console.warn(this.form.value);
         */
 
-        // TODO: implementar servicio de validaciones
         // TODO: implementar servicio de guardado
 
         console.log('pagos', 'f_submit', 'INICIO llamada servicio');
+        this.blockUI.start('Validando pago ...'); //inside method
         this.pagosService.validarPago().subscribe((resp) => this.f_respuestaValidarPago(resp));
         console.log('pagos', 'f_submit', 'FINAL llamada servicio');
 
@@ -320,7 +323,14 @@ export class PagosComponent implements OnInit {
     }
 
     f_respuestaValidarPago(resp: any) {
+        this.blockUI.stop();
         console.log('pagos', 'f_respuestaValidarPago');
         console.log(resp);
+
+        if (Object.keys(resp.warnings).length > 0 || Object.keys(resp.errors).length > 0) {
+            console.log('hay errores');
+        } else {
+            console.log('no hay errores');
+        }
     }
 }

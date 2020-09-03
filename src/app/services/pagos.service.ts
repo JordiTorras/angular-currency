@@ -10,7 +10,28 @@ export class PagosService {
     constructor(private http: HttpClient) {}
 
     validarPago() {
+        const respuesta: object = {
+            warnings: [
+                {
+                    codigo: 35,
+                    mensaje: 'Mensaje de aviso 1',
+                },
+                {
+                    codigo: 67,
+                    mensaje: 'Mensaje de aviso 2',
+                },
+            ],
+            errors: [
+                {
+                    codigo: 70,
+                    mensaje: 'Error - 70: Mensaje del error',
+                },
+            ],
+        };
+
         // simulate http.get()
-        return of({ resultado: false }).pipe(delay(500));
+        // con of({}) devolvemos una respuesta vacia
+        return of({ warnings: {}, errors: {} }).pipe(delay(500));
+        //return of(respuesta).pipe(delay(500));
     }
 }

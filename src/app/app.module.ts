@@ -11,6 +11,7 @@ import { PagosComponent } from './component/pagos/pagos.component';
 import { CambioService, MonedasService, MonedasJsonService } from './services';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BlockUIModule } from 'ng-block-ui';
 
 export function f_cargarTasasDeCambio(servicio: CambioService) {
     return () => servicio.f_obtenerTasaDeCambio();
@@ -36,6 +37,7 @@ export function f_cargarListaMonedasJson(servicio: MonedasJsonService) {
         IMaskModule,
         FontAwesomeModule,
         ReactiveFormsModule,
+        BlockUIModule.forRoot(),
     ],
     providers: [
         {

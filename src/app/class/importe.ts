@@ -1,6 +1,7 @@
 // import { AppInjector } from 'src/app/app.module';
 import { gl_tasas } from 'src/app/services/cambio.service';
 import { Moneda } from './moneda';
+import { environment } from 'src/environments/environment';
 // import IMask from 'imask';
 
 // const servicioTasas = AppInjector.get(CambioService);
@@ -25,8 +26,7 @@ export class Importe {
             this._monedaCambio = new Moneda(p_monedaCambio);
         } else {
             /* Peso Argentino --> moneda por defecto de la instalación */
-            //FIXME: Sustituir moneda 'ARS' por defecto
-            this._monedaCambio = new Moneda('ARS');
+            this._monedaCambio = new Moneda(environment.monedaInstalacion);
         }
         this.f_setFechaCambio(p_fecha); // hay que crear una funcion por que no se puede usar el SET
         this.f_obtenerTasaCambio();
@@ -122,8 +122,7 @@ export class Importe {
             p_monedaDestino = this._monedaCambio.codigoIso;
         }
 
-        // FIXME: modificar del codigo la moneda por defecto 'ARS' archivo de propiedades
-        if (p_monedaDestino === 'ARS') {
+        if (p_monedaDestino === environment.monedaInstalacion) {
             // Calculamos de la MONEDA a ARS de forma directa
             // No hay una funcion para redondear decimales Math.round() solo redondea a enteros
             // hay que usar .toFixed que transforma el número en una cadena por eso luego hay que

@@ -1,4 +1,5 @@
 export const environment = {
-  production: true,
-  name: 'staging',
+    production: true,
+    name: 'staging',
+    monedaInstalacion: 'ARS',
 };
