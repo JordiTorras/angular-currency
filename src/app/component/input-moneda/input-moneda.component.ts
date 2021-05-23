@@ -71,7 +71,6 @@ export class InputMonedaComponent implements OnInit {
                     break;
                 case 'input_monedaCambio':
                     this.cmonedaCambio = changedProp.currentValue;
-                    this.f_ActualizarOpcionesMascara(changedProp.currentValue);
                     break;
                 case 'input_fechaCambio':
                     this._importe.fechaCambio = new Date(changedProp.currentValue);
